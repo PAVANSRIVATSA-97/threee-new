@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="icon" href="./Images/ic_launcher.png" />
+    <link rel="stylesheet" href="./CSS/login.css" />
+  </head>
+  <body>
+    <script language="">
+      function validate(form) {
+        if (form.username.value.length == 0) {
+          alert("Enter username!");
+          form.username.focus();
+          return false;
+        }
+
+        if (form.userpassword.value.length == 0) {
+          alert("Enter password");
+          form.userpassword.focus();
+          return false;
+        }
+
+        return true;
+      }
+    </script>
+    <!-- <script src="username.js"></script> -->
+    <h1 class="welcome">
+      <center>
+        WELCOME TO
+        <div class="threee"><u>THREEE</u></div>
+      </center>
+    </h1>
+    <ul>
+      <li><a href="./login.html">Login</a></li>
+      <li><a href="./index.html">Register</a></li>
+      <li style="float: right">
+        <a class="active" href="./about.html">About</a>
+      </li>
+    </ul>
+    <hr />
+    <div class="outbox">
+      <div class="img">
+        <img src="./Images/ic_launcher.png" padding="25px" />
+        <h1>THREEE</h1>
+        <br />
+        <!-- <p class="color"> THE NEW DEFINATION OF ENTERTAINMENT</p> -->
+        <br />
+      </div>
+      <div class="box">
+        <center>
+          <img
+            src="./Images/login3.png"
+            padding="25px"
+            height="140px"
+            width="140px"
+          />
+          <h2><u>LOGIN</u></h2>
+          <form method="post" action="/login" onsubmit="return validate(this)">
+            <p class="name">
+              Email : <input type="text" name="username" id="uname" />
+            </p>
+            <p class="name">
+              Password : <input type="password" name="userpassword" />
+            </p>
+            <!-- <p class="name">
+              <input type="checkbox" id="rememberme" name="rememberme" />
+              <label for="rememberMe">Remember me</label>
+            </p> -->
+            <p class="name">
+              <input type="submit" value="Login" onclick="lsRememberMe()" />
+            </p>
+            <p class="">
+              doesn't have an account?
+              <a href="./index.html">Register</a>
+            </p>
+          </form>
+        </center>
+      </div>
+    </div>
+    <br />
+  </body>
+
+  <footer class="line">
+    <p id="rights">© ALL RIGHTS RESERVED</p>
+    <span>
+      <p>
+        <a href="https://www.instagram.com/pavansrivatsa97/?hl=en">
+          <div class="insta">
+            <img src="./Images/insta.jpg" alt="" height="30px" width="30px" />
+          </div>
+        </a>
+      </p>
+    </span>
+    <a href="https://www.facebook.com/pavan.rock.97/">
+      <div class="facebook">
+        <img
+          src="./Images/facebook.png"
+          alt="facebook"
+          height="30px"
+          width="30px"
+        />
+      </div>
+    </a>
+    <h3>Email : threee159@gmail.com</h3>
+  </footer>
+</html>

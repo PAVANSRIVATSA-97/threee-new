@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>About — THREEE</title>
+  
+  <link rel="icon" href="./Images/ic_launcher.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-900: #030617;
+      --bg-800: #06102a;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.06);
+      --accent: #7c3aed;
+      --accent-glow: rgba(124, 58, 237, 0.18);
+      --muted: #96a3b6;
+    }
+
+    body.light {
+      --bg-900: #f8fafc;
+      --bg-800: #eef2ff;
+      --muted: #334155;
+      color: #071135;
+      background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 70%);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
+    html, body { 
+      min-height: 100vh; margin: 0; font-family: 'Inter', sans-serif; 
+      color: #e6eef8; background: linear-gradient(180deg, var(--bg-900) 0%, var(--bg-800) 70%);
+      transition: background 0.3s ease; display: flex; flex-direction: column; 
+    }
+
+    /* Desktop View: No scroll */
+    @media (min-width: 981px) {
+      body { overflow: hidden; height: 100vh; }
+      .wrap { flex-grow: 1; align-items: center; }
+    }
+
+    header { 
+      display: flex; align-items: center; justify-content: space-between; 
+      padding: 15px 36px; max-width: 1200px; width: 100%; margin: 0 auto; 
+      position: relative; z-index: 10; flex-shrink: 0; 
+    }
+    
+    .brand { display: flex; align-items: center; gap: 14px; color: inherit; text-decoration: none; }
+    .brand img { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; }
+    .brand > div > div:first-child { font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 18px; }
+    body.light .brand > div > div:first-child { color: #071135; }
+
+    .nav-group { display: flex; align-items: center; }
+    nav { display: flex; align-items: center; }
+    nav a { color: var(--muted); text-decoration: none; margin-left: 20px; font-weight: 600; transition: all 0.2s; position: relative; }
+    nav a.active { color: var(--accent); }
+    nav a.active::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 2px; background: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+
+    body.light nav a { color: #334155; }
+    body.light nav a.active { color: #7c3aed; }
+    #theme-toggle { background: transparent; border: 0; font-size: 22px; cursor: pointer; margin-left: 20px; padding: 0; }
+
+    .about-header-container { text-align: center; padding: 5px 0; flex-shrink: 0; }
+    .about-title {
+      margin: 10px 0; font-family: 'Orbitron', sans-serif; 
+      font-size: clamp(32px, 10vw, 64px); /* Fluid size for mobile */
+      font-weight: 800; background: linear-gradient(to right, #7c3aed, #60a5fa); 
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      text-shadow: 0 10px 30px rgba(124, 58, 237, 0.15);
+      animation: reveal 1.8s ease forwards, float 4s ease-in-out infinite;
+    }
+    @keyframes reveal { 0% { opacity: 0; letter-spacing: -12px; transform: translateY(15px); } 100% { opacity: 1; letter-spacing: 2px; transform: translateY(0); } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+    .wrap { 
+      max-width: 1200px; margin: 0 auto; padding: 0px 36px 10px; 
+      display: grid; gap: 40px; 
+      grid-template-columns: repeat(3, 1fr); /* 3 Cols on Desktop */
+      width: 100%; position: relative; z-index: 2;
+    }
+
+    .box1 { 
+      padding: 24px 24px 45px; border-radius: 14px; background: var(--card-bg); 
+      border: 1px solid var(--card-border); box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      transition: transform 0.3s ease;
+    }
+    .box1:hover { transform: translateY(-10px); background: rgba(124, 58, 237, 0.1); border-color: var(--accent); }
+    
+    body.light .box1 { background: rgba(255, 255, 255, 0.98); border: 1px solid rgba(2, 6, 23, 0.08); color: #071135; }
+
+    .box1 img { width: 100%; height: 185px; object-fit: cover; border-radius: 12px; margin-bottom: 12px; }
+    .box1 h4 { font-family: 'Orbitron', sans-serif; color: var(--accent); margin: 0 0 12px; font-size: 20px; }
+    .box1 p { color: var(--muted); line-height: 1.5; font-size: 14px; margin: 0 0 10px; }
+
+    /* Mobile Overrides */
+    @media (max-width: 980px) {
+      body { overflow-y: auto; height: auto; } /* Allow scrolling on mobile */
+      header { padding: 15px 20px; }
+      .wrap { grid-template-columns: 1fr; padding: 20px 20px 40px; } /* Stack vertically */
+      .box1 img { height: 220px; } /* Slightly larger images on mobile */
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="./index.html">
+      <img src="./Images/ic_launcher.png" alt="logo">
+      <div>
+        <div>THREEE</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">The new definition of Entertainment</div>
+      </div>
+    </a>
+    <div class="nav-group">
+      <nav>
+        <a href="./index.html">Register</a>
+        <a href="./login.html">Login</a>
+        <a href="./about.html" class="active">About</a>
+      </nav>
+      <button id="theme-toggle">🌙</button>
+    </div>
+  </header>
+
+  <div class="about-header-container">
+    <h1 class="about-title">OUR PLATFORMS</h1>
+  </div>
+
+  <main class="wrap">
+    <div class="box1">
+      <img src="./Images/V-MOVIEEE.png" alt="V-MOVIEEE">
+      <h4>V-MOIEEE</h4>
+      <p>Explore movie trailers and insights including cast and ratings. Updated regularly for film enthusiasts.</p>
+    </div>
+    <div class="box1">
+      <img src="./Images/V-GAMEEE.png" alt="V-GAMEEE">
+      <h4>V-GAMEEE</h4>
+      <p>Access a variety of single and multiplayer games. We regularly update our collection to keep the fun alive.</p>
+    </div>
+    <div class="box1">
+      <img src="./Images/V-TUNEEE.png" alt="V-TUNEEE">
+      <h4>V-TUNEEE</h4>
+      <p>Stream the latest music across various genres and stay updated with our regularly refreshed library.</p>
+    </div>
+  </main>
+
+  <script>
+    (function(){
+      const btn = document.getElementById('theme-toggle');
+      const apply = (mode) => {
+        document.body.classList.toggle('light', mode === 'light');
+        btn.textContent = mode === 'light' ? '☀️' : '🌙';
+      };
+      const saved = localStorage.getItem('threee-theme') || 'dark';
+      apply(saved);
+      btn.addEventListener('click', () => {
+        const newMode = document.body.classList.contains('light') ? 'dark' : 'light';
+        localStorage.setItem('threee-theme', newMode);
+        apply(newMode);
+      });
+    })();
+  </script>
+</body>
+</html>
