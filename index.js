@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 /* 1. DATABASE CONNECTION */
-const MONGO_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/THREEE-USERS";
+const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/mydb";
 
 // Helper function to manage connection state
 const connectDB = async () => {
