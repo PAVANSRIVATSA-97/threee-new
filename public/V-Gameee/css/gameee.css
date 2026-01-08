@@ -1,154 +1,189 @@
-@import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@1,700&display=swap");
-
-ul {
-  list-style-type: none;
-  margin: 5px;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
-  border-radius: 50px;
-  width: 100%;
-  /* height: 45px; */
+/* 1. Core Variables & Theme Definitions */
+:root {
+  --bg-900: #030617;
+  --bg-800: #06102a;
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --card-border: rgba(255, 255, 255, 0.06);
+  --accent: #7c3aed;
+  --accent-glow: rgba(124, 58, 237, 0.3);
+  --muted: #96a3b6;
+  --text-main: #ffffff;
 }
 
-li {
-  float: left;
-  font-family: "Poppins", sans-serif;
+body.light-mode {
+  --bg-900: #ffffff;
+  --bg-800: #f1f5f9;
+  --card-bg: rgba(0, 0, 0, 0.03);
+  --card-border: rgba(0, 0, 0, 0.08);
+  --muted: #64748b;
+  --text-main: #0f172a;
 }
 
-li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
+/* 2. Global Reset & Corrected Scrollbar Setting */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.3);
+  border-radius: 10px;
+  border: 2px solid transparent; 
+  background-clip: content-box;
 }
 
-li a:hover {
-  background-color: #111;
-  color: red;
-}
-.heading {
-  color: rgb(255, 0, 0);
-  font-size: 25px;
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-900);
+  color: var(--text-main);
+  height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 20px;
-  font-family: "Merriweather", serif;
-  padding-right: 0px;
-  padding-left: 35px;
-
-  /* border: 2px solid red; */
+  flex-direction: column;
+  overflow: hidden; 
 }
-.main {
+
+/* 3. Premium Header (105px) - Locked Brand Sync */
+header { 
+  height: 105px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  padding: 0 40px; 
+  border-bottom: 1px solid var(--card-border); 
+  background-color: var(--bg-900);
+  flex-shrink: 0; 
+  z-index: 1000;
+}
+
+.brand, .brand img, .brand-title, .brand-tagline {
+  transition: none !important;
   display: flex;
-  width: 100%;
-  /* background-color:black; */
-  height: 100px;
-  /* border: 2px solid red; */
 }
 
-.icon {
-  padding: 1rem;
+.brand { align-items: center; gap: 8px; text-decoration: none; color: inherit; } 
+.brand img { width: 44px; height: 44px; border-radius: 10px; }
+.brand div { display: flex; flex-direction: column; } 
+
+.brand-title { font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 19px; line-height: 1.1; }
+.brand-tagline { font-size: 12px; color: var(--muted); margin-top: -2px; padding-top: 3px;font-family: 'Orbitron', sans-serif; }
+
+.header-right { display: flex; align-items: center; gap: 20px; margin-left: auto;}
+
+/* 4. Navigation Capsule */
+.main-nav { 
+  display: flex; 
+  gap: 30px; 
+  background: var(--card-bg); 
+  padding: 14px 35px; 
+  border-radius: 50px; 
+  border: 1px solid var(--card-border); 
+  backdrop-filter: blur(10px); 
+}
+
+.nav-item { 
+  font-family: 'Orbitron', sans-serif; text-decoration: none; 
+  color: var(--muted); font-size: 15px; font-weight: 700; letter-spacing: 1.5px; 
+}
+.nav-item.active, .nav-item:hover { color: var(--accent); }
+.nav-item.logout { color: #ff4d4d !important; }
+
+#theme-toggle { 
+  background: var(--card-bg); border: 1px solid var(--card-border); 
+  color: var(--text-main); width: 45px; height: 45px; border-radius: 50%; 
+  cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; 
+}
+
+/* 5. Scrollable Content Wrapper */
+.content-wrapper {
+  flex: 1;
+  overflow-y: auto;
   display: flex;
-  justify-content: right;
-  align-items: center;
-  margin: 20px;
-  position: static;
-  /* border: 2px solid red; */
-  margin-left: 480px;
-  padding-right: 0px;
+  flex-direction: column;
+  background-image: url("../Images/game_bg.jpg");
+  background-size: cover;
+  background-position: center;
 }
 
-.all {
-  background-image: url("game.jpg");
+.flexbox { 
+  display: flex; 
+  flex-wrap: wrap; 
+  justify-content: center; 
+  align-items: center; 
+  padding: 40px; 
+  gap: 30px; 
 }
+
+/* 6. Game Cards */
 .card {
-  border: 5px solid rgb(97, 95, 85);
-  margin: 50px 5px;
-
-  opacity: 80%;
-  width: 400px;
-  color: black;
-  font-size: 20px;
-  padding-top: 10px;
+  border: 2px solid var(--card-border);
+  width: 380px;
+  background: rgba(190, 180, 180, 0.1); 
+  backdrop-filter: blur(10px);
   border-radius: 20px;
-  background-color: rgb(190, 180, 180);
-  font-family: "Libre Baskerville", serif;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card:hover { 
+    transform: translateY(-10px); 
+    border-color: var(--accent);
+    background: rgba(190, 180, 180, 0.2);
+}
+
+.card-img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  border: 1px solid var(--card-border);
+}
+
+/* NEW: Game Title Styling */
+.game-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 22px;
+    color: var(--accent);
+    margin-bottom: 12px;
+    text-transform: uppercase;
 }
 
 .text {
-  margin: 10px 20px 10px 9px;
-}
-.btn {
-  margin-left: 140px;
-  width: 110px;
-  padding: 3px 5px;
-  font-size: 20px;
-  border: 2px solid rgb(97, 95, 85);
-  border-radius: 10px;
-  color: black;
-
-  text-align: center;
-  margin-bottom: 10px;
-  margin-top: 0px;
-  font-family: "Libre Baskerville", serif;
-  cursor: pointer;
-}
-.btn:hover {
-  height: 40px;
-  background-color: rgba(0, 0, 0, 0.829);
-  color: rgba(245, 245, 245, 0.868);
-  letter-spacing: 4px;
-  text-align: center;
-  padding-left: 3px;
-}
-.card-img {
-  width: 80%;
-  border: 2px solid rgb(97, 95, 85);
-  height: 300px;
-  margin-left: 35px;
-  border-radius: 15px;
-  opacity: 80%;
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-main);
+  margin-bottom: 20px;
+  min-height: 70px;
 }
 
-.flexbox {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* margin-top: 0px; */
+.know-more {
+  background-color: var(--accent);
+  color: white; 
+  border: none; 
+  border-radius: 50px; 
+  padding: 12px 30px; 
+  cursor: pointer; 
+  font-weight: bold; 
+  font-family: 'Orbitron', sans-serif; 
+  font-size: 14px;
+  transition: background 0.3s, box-shadow 0.3s;
 }
 
-.card-img2 {
-  border: 2px solid rgb(97, 95, 85);
-  border-radius: 10px;
-  height: 295px;
-  margin-left: 48px;
+.know-more:hover {
+    background-color: #6d28d9;
+    box-shadow: 0 0 15px var(--accent-glow);
 }
 
-.card2 {
-  border: 5px solid rgb(97, 95, 85);
-  margin: 50px 5px 52px 5px;
-  height: 468px;
-  width: 400px;
-  color: black;
-  font-size: 20px;
-  padding-top: 10px;
-  border-radius: 20px;
-  background-color: rgb(190, 180, 180);
-  font-family: "Libre Baskerville", serif;
-  opacity: 80%;
-}
-
-::-webkit-scrollbar {
-  width: 15px;
-}
-::-webkit-scrollbar-track {
-  /* background-color: rgba(68, 108, 115, 0.605); */
-  border-radius: 30px;
-}
-::-webkit-scrollbar-thumb {
-  background-color: rgb(190, 180, 180);
-  border-radius: 30px;
+/* 7. Responsive */
+@media (max-width: 768px) {
+    header { height: auto; padding: 15px; flex-direction: column; gap: 15px; }
+    .brand { min-width: unset; width: 100%; justify-content: center; }
+    .header-right { margin-left: 0; width: 100%; flex-direction: column; }
+    .main-nav { width: 100%; justify-content: center; gap: 10px; padding: 10px; border-radius: 15px; }
+    .card { width: 100%; }
+    .brand-tagline { display: none; }
 }

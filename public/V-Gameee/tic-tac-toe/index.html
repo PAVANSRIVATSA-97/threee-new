@@ -4,14 +4,164 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tic Tac Toe</title>
+    <title>Tic Tac Toe — THREEE</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" href="./ic_launcher.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+      :root {
+        --bg-900: #030617;
+        --accent: #7c3aed;
+        --accent-glow: rgba(124, 58, 237, 0.3);
+        --text-main: #ffffff;
+        --muted: #96a3b6;
+        --card-border: rgba(255, 255, 255, 0.2);
+      }
+
+      body.light-mode {
+        --bg-900: #ffffff;
+        --text-main: #0f172a;
+        --muted: #64748b;
+        --card-border: rgba(0, 0, 0, 0.2);
+      }
+
+      body {
+        background-color: var(--bg-900);
+        color: var(--text-main);
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        transition: background-color 0.3s ease;
+      }
+
+      /* Heading centered at the top of the content */
+      .game-header {
+        text-align: center;
+        padding-top: 40px;
+        width: 100%;
+      }
+
+      h1 {
+        font-family: 'Orbitron', sans-serif;
+        color: var(--accent);
+        text-transform: uppercase;
+        margin: 0;
+        font-size: 3rem;
+        letter-spacing: 4px;
+      }
+
+      .gameContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 20px;
+        gap: 60px;
+        flex: 1; /* Pushes back button to bottom */
+      }
+
+      /* Visible Grid Lines */
+      .container {
+        display: grid;
+        grid-template-columns: repeat(3, 10vw);
+        grid-template-rows: repeat(3, 10vw);
+        position: relative;
+      }
+
+      .box {
+        border: 2px solid var(--accent); 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 6vw;
+        cursor: pointer;
+      }
+
+      .bt-0 { border-top: 0; }
+      .bb-0 { border-bottom: 0; }
+      .bl-0 { border-left: 0; }
+      .br-0 { border-right: 0; }
+
+      .gameInfo {
+        text-align: center;
+        min-width: 200px;
+      }
+
+      .info {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: inline-block;
+      }
+
+      #reset {
+        background-color: var(--accent);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-family: 'Orbitron', sans-serif;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: 0.3s;
+      }
+
+      #reset:hover {
+        box-shadow: 0 0 20px var(--accent-glow);
+        transform: translateY(-2px);
+      }
+
+      /* Meme hidden by default */
+      .imgbox img {
+        width: 0; 
+        transition: width 0.3s ease-in-out;
+        margin-top: 20px;
+      }
+
+      .back-container {
+        padding-bottom: 40px;
+        text-align: center;
+      }
+
+      .back-btn {
+        text-decoration: none;
+        color: var(--text-main);
+        font-family: "Orbitron", sans-serif;
+        font-size: 14px;
+        font-weight: bold;
+        border: 2px solid var(--accent); 
+        padding: 12px 25px;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        display: inline-block;
+      }
+
+      .back-btn:hover {
+        background: var(--accent);
+        color: white;
+        box-shadow: 0 0 15px var(--accent-glow);
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 800px) {
+        .container {
+          grid-template-columns: repeat(3, 25vw);
+          grid-template-rows: repeat(3, 25vw);
+        }
+        .box { font-size: 15vw; }
+      }
+    </style>
   </head>
   <body>
-    <nav>
-      <ul></ul>
-    </nav>
+
+    <div class="game-header">
+        <h1>Tic Tac Toe</h1>
+    </div>
 
     <div class="gameContainer">
       <div class="container">
@@ -26,17 +176,29 @@
         <div class="box bb-0"><span class="boxtext"></span></div>
         <div class="box bb-0 br-0"><span class="boxtext"></span></div>
       </div>
+      
       <div class="gameInfo">
-        <h1>Welcome to Tic Tac MyTicTacToe</h1>
         <div>
           <span class="info">Turn for X</span>
-          <button id="reset">Reset</button>
+          <br>
+          <button id="reset">Reset Game</button>
         </div>
         <div class="imgbox">
-          <img src="excited.gif" alt="" />
+          <img src="excited.gif" alt="celebration" />
         </div>
       </div>
     </div>
+
+    <div class="back-container">
+        <a href="../gameee.html" class="back-btn">← BACK TO V-GAMEEE</a>
+    </div>
+
     <script src="script.js"></script>
+    <script>
+      // Theme Persistence
+      if (localStorage.getItem('theme') === 'light-mode') {
+          document.body.classList.add('light-mode');
+      }
+    </script>
   </body>
 </html>

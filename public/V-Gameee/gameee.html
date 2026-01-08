@@ -1,77 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>V-GAMEEE</title>
-    <link rel="stylesheet" href="./css/gameee.css" />
+    <title>V-GAMEEE — THREEE</title>
     <link rel="icon" href="./Images/ic_launcher.png" />
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap");
-    </style>
-  </head>
-  <div class="main">
-    <div class="heading">
-      <h1>V-GAMEEE</h1>
-    </div>
-    <div class="icon">
-      <ul>
-        <li><a href="../V-Movieee/index.html">V-Movieee</a></li>
-        <li><a href="../V-Gameee/gameee.html">V-Gameee</a></li>
-        <li><a href="../V-Tuneee/tune.html">V-Tuneee</a></li>
-        <li><a href="../login.html">Logout</a></li>
-      </ul>
-    </div>
-  </div>
-  <body class="all">
-    <div class="flexbox">
-      <div class="card">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Wild_tic-tac-toe.svg/220px-Wild_tic-tac-toe.svg.png"
-          class="card-img"
-          alt=""
-        />
-        <p class="text">
-          Tic Tac Toe is a two-player game in which the objective is to take
-          turns and mark the correct spaces in a 3x3 (or larger) grid.
-        </p>
-        <button class="btn" onclick="game() ">Play</button>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/gameee.css" />
+</head>
+<body class="dark">
+    <header>
+         <a class="brand">
+      <img src="../Images/ic_launcher.png" alt="logo">
+      <div>
+        <div class="brand-title">THREEE</div>
+        <div class="brand-tagline">Entertainment redefined</div>
       </div>
+    </a>
 
-      <div class="card2">
-        <img src="./Images/Screenshot (7).png" class="card-img2" alt="" />
-        <p class="text">
-          Snake is a simple and classic game where the player maneuvers a
-          growing line that becomes a primary obstacle to itself.
-        </p>
-        <button class="btn" onclick="game2()">Play</button>
-      </div>
+        <div class="header-right">
+            <nav class="main-nav">
+                <a href="../V-Gameee/gameee.html" class="nav-item active">V-ARCADEEE</a>
+                <a href="../V-Tuneee/tune.html" class="nav-item">V-TUNEEE</a>
+                <a href="../V-Movieee/index.html" class="nav-item">V-MOVIEEE</a>
+                <a href="../login.html" class="nav-item logout">LOGOUT</a>
+            </nav>
+            <button id="theme-toggle">🌙</button>
+        </div>
+    </header>
 
-      <div class="card">
-        <img src="./Images/Screenshot (11).png" class="card-img" alt="" />
-        <p class="text">
-          Save the Galaxy from alien swarm attack.The goal is to defeat wave of
-          decending aliens with horizontaly moving space ship.
-        </p>
-        <button class="btn" onclick="game3()">Play</button>
-      </div>
+    <div class="content-wrapper">
+        <div class="flexbox">
+            <div class="card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Wild_tic-tac-toe.svg/220px-Wild_tic-tac-toe.svg.png" class="card-img" alt="Tic Tac Toe" />
+                <h3 class="game-title">Tic Tac Toe</h3>
+                <p class="text">
+                    Tic Tac Toe is a two-player game in which the objective is to take
+                    turns and mark the correct spaces in a 3x3 grid.
+                </p>
+                <button class="know-more" onclick="game()">Play</button>
+            </div>
+
+            <div class="card">
+                <img src="./Images/image.png" class="card-img" alt="Snake Game" />
+                <h3 class="game-title">Snake Game</h3>
+                <p class="text">
+                    Snake is a simple and classic game where the player maneuvers a
+                    growing line that becomes a primary obstacle to itself.
+                </p>
+                <button class="know-more" onclick="game2()">Play</button>
+            </div>
+
+            <div class="card">
+                <img src="./Images/Screenshot (11).png" class="card-img" alt="Space Invaders" />
+                <h3 class="game-title">Space Invaders</h3>
+                <p class="text">
+                    Save the Galaxy from alien swarm attack. Defeat waves of
+                    descending aliens with your horizontally moving space ship.
+                </p>
+                <button class="know-more" onclick="game3()">Play</button>
+            </div>
+        </div>
     </div>
+
     <script>
-      function game() {
-        window.open("/V-Gameee/tic-tac-toe/index.html", "_blank");
+        // Theme Persistence Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        if (localStorage.getItem('theme') === 'light-mode') {
+            document.body.classList.add('light-mode');
+            themeToggle.textContent = '☀️';
+        }
 
-      }
-      function game2() {
-        window.open("Javascript-Snake-Game-master/Javascript-Snake-Game-master/index.html", "_blank");
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            themeToggle.textContent = isLight ? '☀️' : '🌙';
+            localStorage.setItem('theme', isLight ? 'light-mode' : 'dark-mode');
+        });
 
-      }
-      function game3() {
-        window.open(
-          "/V-Gameee/space-invaders-main/space-invaders-main/index.html",
-          "_blank"
-        );
-      }
+        // Game Launch Functions
+        // Game Launch Functions
+function game() { 
+    window.location.href = "tic-tac-toe/index.html"; 
+}
+function game2() { 
+    window.location.href = "Javascript-Snake-Game-master/Javascript-Snake-Game-master/index.html"; 
+}
+function game3() { 
+    window.location.href = "space-invaders-main/space-invaders-main/index.html"; 
+}
     </script>
-  </body>
+</body>
 </html>

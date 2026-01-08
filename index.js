@@ -1,8 +1,3 @@
-// index.js
-
-// Load env vars (.env in dev; Environment Properties in EB)
-require("dotenv").config();
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -12,121 +7,213 @@ const path = require("path");
 
 const app = express();
 
-/* --------------------------- Middleware --------------------------- */
+// Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
-// Serve static assets (and index.html) from /public
-app.use(express.static(path.join(__dirname, "public")));
+/* 1. DATABASE CONNECTION */
+// UPDATED: Using process.env.MONGODB_URI for remote Atlas connection
+const MONGO_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/mydb"; 
 
-// Optional CORS for simple dev
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  next();
-});
+mongoose.connect(MONGO_URI)
+  .then(() => console.log("✅ Connected to MongoDB (Atlas/Local)"))
+  .catch((err) => console.log("❌ Connection Error:", err));
 
-/* ------------------------ MongoDB Connection ---------------------- */
-mongoose.set("strictQuery", false);
-
-const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/threee";
-
-mongoose
-  .connect(MONGO_URI, { serverSelectionTimeoutMS: 15000 })
-  .then(() => {
-    console.log(
-      `✅ Connected to MongoDB (${MONGO_URI.includes("mongodb+srv") ? "Atlas" : "Local"})`
-    );
-  })
-  .catch((err) => {
-    console.error("❌ Error connecting to MongoDB:", err);
-  });
-
-/* ----------------------------- Models ----------------------------- */
-// NOTE: for production, add validation & unique index on email, and store a *hashed* password.
-const userSchema = new mongoose.Schema(
-  {
-    email: { type: String, required: true },
-    password: { type: String, required: true },
-  },
-  { collection: "users", timestamps: true }
-);
+/* 2. SCHEMA & MODEL */
+const userSchema = new mongoose.Schema({
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true }
+}, { collection: 'users', timestamps: true });
 
 const User = mongoose.model("User", userSchema);
 
-/* ----------------------------- Routes ----------------------------- */
-
-// Root: serve /public/index.html
+/* 3. ROUTES */
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+    return res.redirect("index.html");
 });
 
-// Sign Up
 app.post("/signup", async (req, res) => {
-  try {
     const { email, psw, "psw-repeat": repeatpassword } = req.body;
 
-    if (!email || !psw || !repeatpassword) {
-      return res.status(400).send("Missing required fields");
-    }
     if (psw !== repeatpassword) {
-      return res.status(400).send("Passwords do not match");
+        return res.redirect("/index.html?error=mismatch");
     }
-
-    // WARNING: store hashed passwords in real apps.
-    await User.create({ email, password: psw });
-    console.log("✅ User inserted:", email);
-
-    return redirectToHome(email, res);
-  } catch (err) {
-    console.error("❌ Error inserting user:", err);
-    return res.status(500).send("Server error");
-  }
-});
-
-// Login
-app.post("/login", async (req, res) => {
-  try {
-    const { username, userpassword } = req.body;
-    if (!username || !userpassword) {
-      return res.status(400).send("Missing login credentials");
-    }
-
-    // TODO: verify password against stored hash; demo just checks user exists
-    return redirectToHome(username, res);
-  } catch (err) {
-    console.error("❌ Login error:", err);
-    return res.status(500).send("Server error");
-  }
-});
-
-/* --------------------------- Helper(s) ---------------------------- */
-function redirectToHome(username, res) {
-  const homePath = path.join(__dirname, "public", "home.html");
-
-  fs.readFile(homePath, "utf-8", async (err, content) => {
-    if (err) {
-      console.error("❌ Error reading home.html:", err);
-      return res.status(500).send("Server error");
-    }
-
-    const userDisplay = (username || "").split("@")[0] || "User";
-    const renderedHtml = ejs.render(content, { user: userDisplay });
 
     try {
-      const found = await User.findOne({ email: username }).lean();
-      if (!found) {
-        return res.status(404).send("Not a registered user");
-      }
-      return res.send(renderedHtml);
-    } catch (dbErr) {
-      console.error("❌ Database error:", dbErr);
-      return res.status(500).send("Database error");
+        const newUser = new User({ email, password: psw });
+        await newUser.save();
+        return res.redirect(`/home.html?user=${encodeURIComponent(email)}`);
+    } catch (err) {
+        if (err.code === 11000) {
+            return res.redirect("/index.html?error=exists");
+        }
+        console.error("❌ Signup error:", err);
+        return res.status(500).send("Internal Server Error");
     }
-  });
+});
+
+app.post("/login", async (req, res) => {
+    const { email, psw } = req.body; 
+    console.log(`Attempting login for: ${email}`); 
+
+    try {
+        const userFound = await User.findOne({ 
+            email: email, 
+            password: psw 
+        });
+
+        if (!userFound) {
+            console.log("❌ Login failed: No matching user found");
+            return res.redirect("/login.html?error=1");
+        }
+
+        console.log("✅ Login successful for:", email);
+        return res.redirect(`/home.html?user=${encodeURIComponent(email)}`);
+
+    } catch (err) {
+        console.error("❌ Login error:", err);
+        return res.status(500).send("Internal server error");
+    }
+});
+
+/* 4. HELPER FUNCTION */
+function redirect_to_home(username, res) {
+    const homePath = path.join(__dirname, "public", "home.html");
+    
+    fs.readFile(homePath, "utf-8", (err, content) => {
+        if (err) {
+            console.log("❌ File read error:", err);
+            return res.status(500).send("Home page not found");
+        }
+        const userDisplay = username.split("@")[0];
+        const renderedHtml = ejs.render(content, { user: userDisplay });
+        return res.send(renderedHtml);
+    });
 }
 
-/* -------------------------- Start Server -------------------------- */
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Server listening on port ${PORT}`);
+/* 5. START SERVER */
+// UPDATED: Using process.env.PORT for Vercel compatibility
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`🚀 Server listening on port ${port}`);
 });
+//---------------------------------------------------------------------------------------------------
+
+// index.js
+
+// index.js
+
+// const express = require("express");
+// const bodyParser = require("body-parser");
+// const mongoose = require("mongoose");
+// const ejs = require("ejs");
+// const fs = require("fs");
+// const path = require("path");
+
+// const app = express();
+
+// // Middleware
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(express.static("public"));
+
+// /* 1. DATABASE CONNECTION */
+// // Use 127.0.0.1 for local connection to mydb
+// const MONGO_URI = "mongodb://127.0.0.1:27017/mydb"; 
+
+// mongoose.connect(MONGO_URI)
+//   .then(() => console.log("✅ Connected to Local MongoDB (mydb)"))
+//   .catch((err) => console.log("❌ Connection Error:", err));
+
+// /* 2. SCHEMA & MODEL */
+// // Field names match your Compass screenshot exactly
+// const userSchema = new mongoose.Schema({
+//     email: { type: String, required: true, unique: true },
+//     password: { type: String, required: true }
+// }, { collection: 'users', timestamps: true });
+
+// const User = mongoose.model("User", userSchema);
+
+// /* 3. ROUTES */
+
+// app.get("/", (req, res) => {
+//     return res.redirect("index.html");
+// });
+
+// app.post("/signup", async (req, res) => {
+//     const { email, psw, "psw-repeat": repeatpassword } = req.body;
+
+//     // Handle Password Mismatch
+//     if (psw !== repeatpassword) {
+//         return res.redirect("/index.html?error=mismatch");
+//     }
+
+//     try {
+//         const newUser = new User({ email, password: psw });
+//         await newUser.save();
+//         return res.redirect(`/home.html?user=${encodeURIComponent(email)}`);
+//     } catch (err) {
+//         // Handle Duplicate Email (Mongo Error 11000)
+//         if (err.code === 11000) {
+//             return res.redirect("/index.html?error=exists");
+//         }
+//         console.error("❌ Signup error:", err);
+//         return res.status(500).send("Internal Server Error");
+//     }
+// });
+
+// // LOGIN ROUTE
+// app.post("/login", async (req, res) => {
+//     // UPDATED: Destructuring matches your login.html names 'email' and 'psw'
+//     const { email, psw } = req.body; 
+
+//     console.log(`Attempting login for: ${email}`); 
+
+//     try {
+//         // Find user where 'email' and 'password' match the mydb document
+//         const userFound = await User.findOne({ 
+//             email: email, 
+//             password: psw 
+//         });
+
+//         if (!userFound) {
+//             console.log("❌ Login failed: No matching user in mydb");
+//             // UPDATED: Redirect with error flag instead of sending plain text
+//             return res.redirect("/login.html?error=1");
+//         }
+
+//         console.log("✅ Login successful for:", email);
+        
+//         // Redirect to home and pass user email in the URL
+//         return res.redirect(`/home.html?user=${encodeURIComponent(email)}`);
+
+//     } catch (err) {
+//         console.error("❌ Login error:", err);
+//         return res.status(500).send("Internal server error");
+//     }
+// });
+
+// /* 4. HELPER FUNCTION */
+// function redirect_to_home(username, res) {
+//     const homePath = path.join(__dirname, "public", "home.html");
+    
+//     fs.readFile(homePath, "utf-8", (err, content) => {
+//         if (err) {
+//             console.log("❌ File read error:", err);
+//             return res.status(500).send("Home page not found");
+//         }
+
+//         // Display the part of email before the '@'
+//         const userDisplay = username.split("@")[0];
+//         const renderedHtml = ejs.render(content, { user: userDisplay });
+        
+//         return res.send(renderedHtml);
+//     });
+// }
+
+// /* 5. START SERVER */
+// const port = 3000;
+// app.listen(port, () => {
+//     console.log(`🚀 Server listening on port ${port}`);
+// });

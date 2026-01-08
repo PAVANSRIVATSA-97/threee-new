@@ -10,6 +10,25 @@ const changeTurn = ()=>{
     return turn === "X"? "0": "X"
 }
 
+// NEW: Function to check for a Draw
+const checkDraw = () => {
+    let boxtext = document.getElementsByClassName('boxtext');
+    let filledCount = 0;
+    Array.from(boxtext).forEach(element => {
+        if (element.innerText !== "") {
+            filledCount++;
+        }
+    });
+    
+    // If all 9 boxes are filled and game is not won
+    if (filledCount === 9 && !isgameover) {
+        document.querySelector('.info').innerText = "It's a Draw!";
+        isgameover = true;
+        // Optionally play gameover sound
+        gameover.play();
+    }
+}
+
 // Function to check for a win
 const checkWin = ()=>{
     let boxtext = document.getElementsByClassName('boxtext');
@@ -35,17 +54,23 @@ const checkWin = ()=>{
 }
 
 // Game Logic
-// music.play()
 let boxes = document.getElementsByClassName("box");
 Array.from(boxes).forEach(element =>{
     let boxtext = element.querySelector('.boxtext');
     element.addEventListener('click', ()=>{
-        if(boxtext.innerText === ''){
+        if(boxtext.innerText === '' && !isgameover){
             boxtext.innerText = turn;
-            turn = changeTurn();
             audioTurn.play();
+            
+            // Check for Win first, then check for Draw
             checkWin();
+            
             if (!isgameover){
+                checkDraw(); // Check if this move resulted in a draw
+            }
+
+            if (!isgameover){
+                turn = changeTurn();
                 document.getElementsByClassName("info")[0].innerText  = "Turn for " + turn;
             } 
         }
@@ -53,7 +78,7 @@ Array.from(boxes).forEach(element =>{
 })
 
 // Add onclick listener to reset button
-reset.addEventListener('click', ()=>{
+document.getElementById('reset').addEventListener('click', ()=>{
     let boxtexts = document.querySelectorAll('.boxtext');
     Array.from(boxtexts).forEach(element => {
         element.innerText = ""
@@ -64,4 +89,3 @@ reset.addEventListener('click', ()=>{
     document.getElementsByClassName("info")[0].innerText  = "Turn for " + turn;
     document.querySelector('.imgbox').getElementsByTagName('img')[0].style.width = "0px"
 })
-

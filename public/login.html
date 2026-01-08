@@ -1,109 +1,313 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
-    <link rel="icon" href="./Images/ic_launcher.png" />
-    <link rel="stylesheet" href="./CSS/login.css" />
-  </head>
-  <body>
-    <script language="">
-      function validate(form) {
-        if (form.username.value.length == 0) {
-          alert("Enter username!");
-          form.username.focus();
-          return false;
-        }
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Login — THREEE</title>
+  
+  <link rel="icon" href="./Images/ic_launcher.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-900: #030617;
+      --bg-800: #06102a;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.06);
+      --accent: #7c3aed;
+      --accent-glow: rgba(124, 58, 237, 0.18);
+      --muted: #96a3b6;
+      --error: #ff4d4d;
+    }
 
-        if (form.userpassword.value.length == 0) {
-          alert("Enter password");
-          form.userpassword.focus();
-          return false;
-        }
+    body.light {
+      --bg-900: #f8fafc;
+      --bg-800: #eef2ff;
+      --muted: #334155;
+      color: #071135;
+    }
 
-        return true;
-      }
-    </script>
-    <!-- <script src="username.js"></script> -->
-    <h1 class="welcome">
-      <center>
-        WELCOME TO
-        <div class="threee"><u>THREEE</u></div>
-      </center>
-    </h1>
-    <ul>
-      <li><a href="./login.html">Login</a></li>
-      <li><a href="./index.html">Register</a></li>
-      <li style="float: right">
-        <a class="active" href="./about.html">About</a>
-      </li>
-    </ul>
-    <hr />
-    <div class="outbox">
-      <div class="img">
-        <img src="./Images/ic_launcher.png" padding="25px" />
-        <h1>THREEE</h1>
-        <br />
-        <!-- <p class="color"> THE NEW DEFINATION OF ENTERTAINMENT</p> -->
-        <br />
-      </div>
-      <div class="box">
-        <center>
-          <img
-            src="./Images/login3.png"
-            padding="25px"
-            height="140px"
-            width="140px"
-          />
-          <h2><u>LOGIN</u></h2>
-          <form method="post" action="/login" onsubmit="return validate(this)">
-            <p class="name">
-              Email : <input type="text" name="username" id="uname" />
-            </p>
-            <p class="name">
-              Password : <input type="password" name="userpassword" />
-            </p>
-            <!-- <p class="name">
-              <input type="checkbox" id="rememberme" name="rememberme" />
-              <label for="rememberMe">Remember me</label>
-            </p> -->
-            <p class="name">
-              <input type="submit" value="Login" onclick="lsRememberMe()" />
-            </p>
-            <p class="">
-              doesn't have an account?
-              <a href="./index.html">Register</a>
-            </p>
-          </form>
-        </center>
-      </div>
-    </div>
-    <br />
-  </body>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
+    html, body, .info-container, .card, .pill, input { 
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+      will-change: background-color, color; 
+    }
 
-  <footer class="line">
-    <p id="rights">© ALL RIGHTS RESERVED</p>
-    <span>
-      <p>
-        <a href="https://www.instagram.com/pavansrivatsa97/?hl=en">
-          <div class="insta">
-            <img src="./Images/insta.jpg" alt="" height="30px" width="30px" />
-          </div>
-        </a>
-      </p>
-    </span>
-    <a href="https://www.facebook.com/pavan.rock.97/">
-      <div class="facebook">
-        <img
-          src="./Images/facebook.png"
-          alt="facebook"
-          height="30px"
-          width="30px"
-        />
+    html, body { 
+      height: 100vh; margin: 0; font-family: 'Inter', sans-serif; 
+      color: #e6eef8; background: linear-gradient(180deg, var(--bg-900) 0%, var(--bg-800) 70%);
+      transition: background 0.3s ease; display: flex; flex-direction: column; 
+      overflow: hidden; 
+    }
+
+    header { 
+      display: flex; align-items: center; justify-content: space-between; 
+      padding: 15px 36px; max-width: 1200px; width: 100%; margin: 0 auto; 
+      position: relative; z-index: 10; flex-shrink: 0; 
+    }
+
+    .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; }
+    .brand img { width: 44px; height: 44px; border-radius: 10px; }
+    .brand-title { font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 19px; line-height: 1.1; }
+    .brand-tagline { font-size: 12px; color: var(--muted); margin-top: -2px; padding-top: 3px;font-family: 'Orbitron', sans-serif; }
+
+    .nav-group { display: flex; align-items: center; }
+    nav a { color: var(--muted); text-decoration: none; margin-left: 20px; font-weight: 600; transition: all 0.2s; position: relative; font-size: 18px; font-family: 'Orbitron', sans-serif;}
+    nav a:hover, nav a.active { color: var(--accent); }
+    nav a.active::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 2px;
+      background: var(--accent); box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    #theme-toggle { background: transparent; border: 0; font-size: 25px; cursor: pointer; margin-left: 20px; padding: 0;padding-bottom: 1px; }
+
+    .welcome-container { text-align: center; padding: 5px 0; flex-shrink: 0; }
+    .welcome-header {
+      margin: 10px 0; font-family: 'Orbitron', sans-serif; font-size: 64px; font-weight: 800; 
+      background: linear-gradient(to right, #7c3aed, #60a5fa); -webkit-background-clip: text; 
+      background-clip: text; -webkit-text-fill-color: transparent;
+      text-shadow: 0 10px 30px rgba(124, 58, 237, 0.15);
+      animation: reveal 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, float 4s ease-in-out infinite;
+    }
+
+    @keyframes reveal { 0% { opacity: 0; letter-spacing: -12px; filter: blur(10px); transform: translateY(15px); } 100% { opacity: 1; letter-spacing: 4px; filter: blur(0); transform: translateY(0); } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+    .wrap { 
+      max-width: 1200px; margin: 0 auto; padding: 0px 36px 10px; 
+      display: grid; gap: 40px; width: 100%; justify-content: center;
+      position: relative; z-index: 2; grid-template-columns: 1.3fr 420px; align-items: stretch;
+    }
+
+    .info-container { 
+      padding: 36px; border-radius: 14px; background: var(--card-bg); 
+      border: 1px solid var(--card-border); box-shadow: 0 8px 30px rgba(2, 6, 23, 0.4);
+      display: flex; flex-direction: column; position: relative; overflow: hidden; z-index: 1;
+    }
+
+    .info-container h1 { font-family: 'Orbitron', sans-serif; font-size: 32px; margin: 0 0 10px; letter-spacing: 1px; }
+    .lead { color: #fff; font-weight: 600; line-height: 1.6; margin-bottom: 10px; font-size: 16px; }
+    body.light .lead { color: #071135; }
+
+    .sub-lead { font-size: 13.5px; color: var(--muted); opacity: 0.9; line-height: 1.6; margin-bottom: 25px; max-width: 90%; }
+
+    .feature-pills { display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
+    .pill {
+      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border);
+      padding: 10px 22px; border-radius: 25px; font-size: 14px; font-weight: 700;
+      color: var(--muted); font-family: 'Orbitron', sans-serif; display: flex; align-items: center; gap: 8px;
+    }
+    body.light .pill { background: #fff; border: 1px solid rgba(124, 58, 237, 0.2); }
+
+    .secure-badge {
+      display: flex; align-items: center; gap: 12px; padding: 16px;
+      background: rgba(124, 58, 237, 0.08); border-radius: 12px;
+      border-left: 4px solid var(--accent); margin-top: auto;
+    }
+
+    .pulse-ring {
+      width: 10px; height: 10px; background: var(--accent); border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent); animation: pulse-glow 2s infinite;
+    }
+
+    @keyframes pulse-glow {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      70% { transform: scale(1.5); opacity: 0; }
+      100% { transform: scale(0.95); opacity: 0; }
+    }
+
+    .badge-text { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; color: var(--accent); }
+
+    .card { 
+      padding: 36px; border-radius: 14px; background: var(--card-bg); 
+      border: 1px solid var(--card-border); box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+      display: flex; flex-direction: column;
+    }
+
+    #error-box {
+      display: none; color: var(--error); background: rgba(255, 77, 77, 0.1); 
+      padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 700; 
+      margin-top: 10px; border: 1px solid rgba(255, 77, 77, 0.2); text-align: left;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-8px); }
+    }
+
+    .card h2 { margin: 0 0 5px; font-size: 22px; }
+    
+    label { display: block; font-size: 11px; color: var(--muted); margin-top: 15px; margin-bottom: 8px; font-weight: 600; }
+
+    .input-wrapper { position: relative; margin-top: 6px; }
+    input { 
+      width: 100%; padding: 12px; padding-right: 45px; border-radius: 10px; 
+      border: 1px solid var(--card-border); background: rgba(255,255,255,0.02); 
+      color: inherit; font-size: 15px;
+    }
+    
+    .toggle-password {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      cursor: pointer; font-size: 18px; opacity: 0.6;
+    }
+
+    body.light input { border: 1.5px solid rgba(124, 58, 237, 0.2); background: #ffffff; color: #0f172a; }
+    input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+    
+    .actions { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+    .actions a { color: var(--accent); text-decoration: none; font-weight: 700; font-size: 13px; }
+    
+    button[type="submit"] { 
+      background: linear-gradient(90deg, var(--accent), #9a6bff); color: white; 
+      padding: 12px 28px; border-radius: 11px; border: 0; font-weight: 800; cursor: pointer;
+    }
+
+    @media (max-width: 980px) {
+      body { overflow-y: auto; height: auto; }
+      .wrap { grid-template-columns: 1fr; padding: 20px; }
+      .info-container { display: none; } 
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="../home.html">
+      <img src="./Images/ic_launcher.png" alt="logo">
+      <div>
+        <div class="brand-title">THREEE</div>
+        <div class="brand-tagline">Entertainment redefined</div>
       </div>
     </a>
-    <h3>Email : threee159@gmail.com</h3>
-  </footer>
+    <div class="nav-group">
+      <nav>
+        <a href="./about.html">About</a>
+        <a href="./index.html">Register</a>
+        <a href="./login.html" class="active">Login</a>
+      </nav>
+      <button id="theme-toggle">🌙</button>
+    </div>
+  </header>
+
+  <div class="welcome-container">
+    <div class="welcome-header">Welcome Back</div>
+  </div>
+
+  <main class="wrap">
+    <section class="info-container">
+      <h1>Entertainment <span style="color: var(--accent);">Awaits</span></h1>
+      <p class="lead">Access your personalized dashboard and track your digital journey.</p>
+      <p class="sub-lead">Discover curated cinema, challenge your arcade skills, and find your rhythm with trending beats—all under one identity.</p>
+
+      <div class="feature-pills">
+        <div class="pill">🎬 Cinema</div>
+        <div class="pill">🎮 Arcade</div>
+        <div class="pill">🎵 Beats</div>
+      </div>
+
+      <div class="secure-badge">
+        <div class="pulse-ring"></div>
+        <span class="lock-icon">🔐</span>
+        <span class="badge-text">SECURE ENCRYPTED ACCESS</span>
+      </div>
+    </section>
+
+    <aside class="card">
+      <h2>Account Login</h2>
+      
+      <form action="/login" method="POST">
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="you@domain.com" required>
+        
+        <label>Password</label>
+        <div class="input-wrapper">
+          <input type="password" id="psw" name="psw" placeholder="Enter password" required>
+          <span class="toggle-password" onclick="togglePassword()">👁️</span>
+        </div>
+
+          <div id="error-box" style="display: none; color: #ff4d4d; background: rgba(255, 77, 77, 0.1); padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 700; margin-top: 10px; border: 1px solid rgba(255, 77, 77, 0.2); text-align: left;">
+  ⚠️ Incorrect email or password.
+</div>
+      
+
+        <div class="actions">
+          <div class="muted" style="font-size:12px; color: var(--muted)">New User? <a href="./index.html">Register</a></div>
+          <button type="submit">Login</button>
+        </div>
+      </form>
+    </aside>
+  </main>
+
+  <script>
+    (function(){
+      const btn = document.getElementById('theme-toggle');
+      const apply = (mode) => {
+        document.body.classList.toggle('light', mode === 'light');
+        btn.textContent = mode === 'light' ? '☀️' : '🌙';
+        setTimeout(resize, 50); 
+      };
+      const saved = localStorage.getItem('threee-theme') || 'dark';
+      apply(saved);
+      btn.addEventListener('click', () => {
+        const newMode = document.body.classList.contains('light') ? 'dark' : 'light';
+        localStorage.setItem('threee-theme', newMode);
+        apply(newMode);
+      });
+    })();
+
+    function togglePassword() {
+      const psw = document.getElementById('psw');
+      const icon = document.querySelector('.toggle-password');
+      if (psw.type === "password") {
+        psw.type = "text";
+        icon.innerText = "🙈";
+      } else {
+        psw.type = "password";
+        icon.innerText = "👁️";
+      }
+    }
+
+    // Unified Error Detection Script
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const errorBox = document.getElementById('error-box');
+      const card = document.querySelector('.card');
+
+      if (urlParams.has('error')) {
+        const errorType = urlParams.get('error');
+        if (errorBox) {
+          errorBox.style.display = 'block';
+          if (card) card.style.animation = 'shake 0.4s ease-in-out';
+          
+          if (errorType === '1') {
+            errorBox.textContent = "⚠️ Incorrect email or password.";
+          } else if (errorType === 'mismatch') {
+            errorBox.textContent = "⚠️ Passwords do not match.";
+          }
+        }
+      }
+    });
+
+    const container = document.querySelector('.info-container');
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'absolute'; canvas.style.top = '0'; canvas.style.left = '0';
+    canvas.style.zIndex = '-1'; canvas.style.opacity = '0.4';
+    container.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resize() { canvas.width = container.offsetWidth; canvas.height = container.offsetHeight; init(); }
+    class Particle {
+      constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 2.2; this.speedY = Math.random() * 0.4 + 0.1; }
+      update() { this.y -= this.speedY; if (this.y < 0) this.y = canvas.height; }
+      draw() { ctx.fillStyle = '#7c3aed'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+    }
+    function init() { particles = []; for (let i = 0; i < 40; i++) particles.push(new Particle()); }
+    function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+    window.addEventListener('resize', resize);
+    resize(); animate();
+  </script>
+</body>
 </html>

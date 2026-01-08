@@ -1,54 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <title>V-MOVIEEE</title>
+    <title>V-MOVIEEE — THREEE</title>
     <link rel="icon" href="../Images/ic_launcher.png" />
-  </head>
-  <body>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dark">
     <header>
-      <div class="heading">
-        <h1>V-MOVIEEE</h1>
-      </div>
-      <div class="icon">
-        <ul>
-          <li><a href="../V-Movieee/index.html">V-Movieee</a></li>
-          <li><a href="../V-Gameee/gameee.html">V-Gameee</a></li>
-          <li><a href="../V-Tuneee/tune.html">V-Tuneee</a></li>
-          <li><a href="../login.html">Logout</a></li>
-        </ul>
-        <form id="form">
-          <input type="text" placeholder="Search" id="search" class="search" />
-        </form>
-      </div>
+        <a class="brand">
+            <img src="../Images/ic_launcher.png" alt="logo">
+            <div>
+                <div class="brand-title">THREEE</div>
+                <div class="brand-tagline">Entertainment redefined</div>
+            </div>
+        </a>
+
+        <div class="header-right">
+            <div class="search-wrapper">
+                <form id="form">
+                    <div class="input-group">
+                        <input type="text" placeholder="Search Movies..." id="search" class="search" autocomplete="off" />
+                        <button type="button" id="clear-search" class="clear-btn">&times;</button>
+                    </div>
+                </form>
+                <div id="search-suggestions" class="suggestions-box"></div>
+            </div>
+
+            <nav class="main-nav">
+                <a href="../V-Gameee/gameee.html" class="nav-item">V-ARCADEEE</a>
+                <a href="../V-Tuneee/tune.html" class="nav-item">V-TUNEEE</a>
+                <a href="../V-Movieee/index.html" class="nav-item active">V-MOVIEEE</a>
+                <a href="../login.html" class="nav-item logout">LOGOUT</a>
+            </nav>
+            <button id="theme-toggle">🌙</button>
+        </div>
     </header>
-    <div id="tags"></div>
-    <div id="myNav" class="overlay">
-      <!-- Button to close the overlay navigation -->
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
-        >&times;</a
-      >
 
-      <!-- Overlay content -->
-      <div class="overlay-content" id="overlay-content"></div>
-
-      <a href="javascript:void(0)" class="arrow left-arrow" id="left-arrow"
-        >&#8656;</a
-      >
-
-      <a href="javascript:void(0)" class="arrow right-arrow" id="right-arrow"
-        >&#8658;</a
-      >
+    <div class="content-wrapper">
+        <div id="tags"></div>
+        <main id="main"></main>
+        <div class="pagination">
+            <div class="page" id="prev">Previous</div>
+            <div class="current" id="current">1</div>
+            <div class="page" id="next">Next</div>
+        </div>
     </div>
-    <main id="main"></main>
-    <div class="pagination">
-      <div class="page" id="prev">Previous Page</div>
-      <div class="current" id="current">1</div>
-      <div class="page" id="next">Next Page</div>
+
+    <div id="myNav" class="overlay">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <div class="overlay-content" id="overlay-content"></div>
+        
     </div>
 
     <script src="script.js"></script>
-  </body>
+</body>
 </html>

@@ -24,61 +24,91 @@
       --bg-900: #f8fafc;
       --bg-800: #eef2ff;
       --muted: #334155;
+      --card-border: rgba(2, 6, 23, 0.1);
       color: #071135;
-      background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 70%);
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
     html, body { 
-      min-height: 100vh; margin: 0; font-family: 'Inter', sans-serif; 
+      height: 100vh; margin: 0; font-family: 'Inter', sans-serif; 
       color: #e6eef8; background: linear-gradient(180deg, var(--bg-900) 0%, var(--bg-800) 70%);
-      transition: background 0.3s ease; display: flex; flex-direction: column; 
+      transition: background 0.3s ease;
+      overflow: hidden; /* Lock the main body to prevent double scrollbars */
+      display: flex;
+      flex-direction: column;
     }
 
-    /* Desktop View: No scroll */
-    @media (min-width: 981px) {
-      body { overflow: hidden; height: 100vh; }
-      .wrap { flex-grow: 1; align-items: center; }
-    }
-
+    /* Standard Header */
     header { 
       display: flex; align-items: center; justify-content: space-between; 
       padding: 15px 36px; max-width: 1200px; width: 100%; margin: 0 auto; 
-      position: relative; z-index: 10; flex-shrink: 0; 
+      position: relative; z-index: 100; flex-shrink: 0; 
     }
-    
-    .brand { display: flex; align-items: center; gap: 14px; color: inherit; text-decoration: none; }
-    .brand img { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; }
-    .brand > div > div:first-child { font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 18px; }
-    body.light .brand > div > div:first-child { color: #071135; }
+
+    /* SCROLL CONTAINER: This makes the scrollbar start below the nav */
+    .content-scroll-area {
+      flex-grow: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-gutter: stable; /* Keeps layout from shifting when scrollbar appears */
+    }
+
+    /* CUSTOM SCROLLBAR - Applied only to content area */
+    .content-scroll-area::-webkit-scrollbar {
+      width: 10px;
+    }
+    .content-scroll-area::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .content-scroll-area::-webkit-scrollbar-thumb {
+      background: linear-gradient(var(--accent), #60a5fa);
+      border-radius: 10px;
+      border: 2px solid var(--bg-900);
+    }
+    .content-scroll-area::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
+    }
+
+    /* Styling for brand and nav */
+    .brand { align-items: center; gap: 8px; text-decoration: none; color: inherit; display: flex; }
+    .brand img { width: 44px; height: 44px; border-radius: 10px; }
+    .brand-title { font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 19px; line-height: 1.1; }
+    .brand-tagline { font-size: 12px; color: var(--muted); margin-top: -2px; padding-top: 3px; font-family: 'Orbitron', sans-serif;}
 
     .nav-group { display: flex; align-items: center; }
-    nav { display: flex; align-items: center; }
-    nav a { color: var(--muted); text-decoration: none; margin-left: 20px; font-weight: 600; transition: all 0.2s; position: relative; }
-    nav a.active { color: var(--accent); }
-    nav a.active::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 2px; background: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
-
-    body.light nav a { color: #334155; }
-    body.light nav a.active { color: #7c3aed; }
-    #theme-toggle { background: transparent; border: 0; font-size: 22px; cursor: pointer; margin-left: 20px; padding: 0; }
-
-    .about-header-container { text-align: center; padding: 5px 0; flex-shrink: 0; }
-    .about-title {
-      margin: 10px 0; font-family: 'Orbitron', sans-serif; 
-      font-size: clamp(32px, 10vw, 64px); /* Fluid size for mobile */
-      font-weight: 800; background: linear-gradient(to right, #7c3aed, #60a5fa); 
-      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-      text-shadow: 0 10px 30px rgba(124, 58, 237, 0.15);
-      animation: reveal 1.8s ease forwards, float 4s ease-in-out infinite;
+    nav a { color: var(--muted); text-decoration: none; margin-left: 20px; font-weight: 600; transition: all 0.2s; position: relative; font-size: 18px; font-family: 'Orbitron', sans-serif;}
+    nav a:hover, nav a.active { color: var(--accent); }
+    nav a.active::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 2px;
+      background: var(--accent); box-shadow: 0 0 10px var(--accent-glow);
     }
-    @keyframes reveal { 0% { opacity: 0; letter-spacing: -12px; transform: translateY(15px); } 100% { opacity: 1; letter-spacing: 2px; transform: translateY(0); } }
+
+    #theme-toggle { background: transparent; border: 0; font-size: 25px; cursor: pointer; margin-left: 20px; padding: 0; }
+
+    .about-header-container { text-align: center; padding: 40px 20px 20px; }
+    .about-title {
+      margin: 10px 0; font-family: 'Orbitron', sans-serif; font-size: 64px; font-weight: 800;
+      background: linear-gradient(to right, #7c3aed, #60a5fa); -webkit-background-clip: text; 
+      background-clip: text; -webkit-text-fill-color: transparent;
+      text-shadow: 0 10px 30px rgba(124, 58, 237, 0.15);
+      animation: reveal 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, float 4s ease-in-out infinite;
+    }
+
+    @keyframes reveal { 0% { opacity: 0; letter-spacing: -12px; filter: blur(10px); transform: translateY(15px); } 100% { opacity: 1; letter-spacing: 4px; filter: blur(0); transform: translateY(0); } }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
+    .concept-container { max-width: 1000px; margin: 0 auto 50px; text-align: center; padding: 0 36px; }
+    .concept-text { font-size: 16px; line-height: 1.8; color: var(--muted); font-weight: 400; }
+    .highlight-eee { font-family: 'Orbitron', sans-serif; color: var(--accent); font-weight: 800; letter-spacing: 2px; }
+
+    .section-divider { text-align: center; margin-bottom: 40px; margin-top: 40px; }
+    .section-divider h2 { font-family: 'Orbitron', sans-serif; font-size: 28px; color: #fff; letter-spacing: 3px; }
+    body.light .section-divider h2 { color: #071135; }
+
     .wrap { 
-      max-width: 1200px; margin: 0 auto; padding: 0px 36px 10px; 
-      display: grid; gap: 40px; 
-      grid-template-columns: repeat(3, 1fr); /* 3 Cols on Desktop */
+      max-width: 1200px; margin: 0 auto; padding: 0px 36px 40px; 
+      display: grid; gap: 40px; grid-template-columns: repeat(3, 1fr); 
       width: 100%; position: relative; z-index: 2;
     }
 
@@ -89,62 +119,125 @@
       transition: transform 0.3s ease;
     }
     .box1:hover { transform: translateY(-10px); background: rgba(124, 58, 237, 0.1); border-color: var(--accent); }
-    
-    body.light .box1 { background: rgba(255, 255, 255, 0.98); border: 1px solid rgba(2, 6, 23, 0.08); color: #071135; }
+    body.light .box1 { background: rgba(255, 255, 255, 0.98); }
 
     .box1 img { width: 100%; height: 185px; object-fit: cover; border-radius: 12px; margin-bottom: 12px; }
     .box1 h4 { font-family: 'Orbitron', sans-serif; color: var(--accent); margin: 0 0 12px; font-size: 20px; }
-    .box1 p { color: var(--muted); line-height: 1.5; font-size: 14px; margin: 0 0 10px; }
+    .box1 p { color: var(--muted); line-height: 1.5; font-size: 14px; margin: 0; }
 
-    /* Mobile Overrides */
+    .more-info-grid { max-width: 1200px; margin: 0 auto 60px; padding: 0 36px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .info-card { background: rgba(124, 58, 237, 0.05); border: 1px solid var(--card-border); padding: 30px; border-radius: 14px; }
+    .info-card h3 { font-family: 'Orbitron', sans-serif; color: var(--accent); margin-top: 0; }
+    .info-card ul { list-style: none; padding: 0; color: var(--muted); font-size: 14px; line-height: 2; }
+    .info-card ul li::before { content: "✓ "; color: var(--accent); font-weight: bold; }
+    body.light .info-card { background: #fff; }
+
+    .mission-section { text-align: center; max-width: 800px; margin: 0 auto 100px; padding: 0 36px; }
+    .mission-text { font-style: italic; color: var(--muted); font-size: 18px; line-height: 1.6; }
+
     @media (max-width: 980px) {
-      body { overflow-y: auto; height: auto; } /* Allow scrolling on mobile */
       header { padding: 15px 20px; }
-      .wrap { grid-template-columns: 1fr; padding: 20px 20px 40px; } /* Stack vertically */
-      .box1 img { height: 220px; } /* Slightly larger images on mobile */
+      .wrap, .more-info-grid { grid-template-columns: 1fr; }
+      .about-title { font-size: 42px; }
     }
   </style>
 </head>
 <body>
   <header>
-    <a class="brand" href="./index.html">
+    <a class="brand" href="../home.html">
       <img src="./Images/ic_launcher.png" alt="logo">
       <div>
-        <div>THREEE</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px">The new definition of Entertainment</div>
+        <div class="brand-title">THREEE</div>
+        <div class="brand-tagline">Entertainment redefined</div>
       </div>
     </a>
     <div class="nav-group">
       <nav>
+        <a href="./about.html" class="active">About</a>
         <a href="./index.html">Register</a>
         <a href="./login.html">Login</a>
-        <a href="./about.html" class="active">About</a>
       </nav>
       <button id="theme-toggle">🌙</button>
     </div>
   </header>
 
-  <div class="about-header-container">
-    <h1 class="about-title">OUR PLATFORMS</h1>
-  </div>
+  <div class="content-scroll-area">
+    <div class="about-header-container">
+      <h1 class="about-title">WHY THREEE?</h1>
+    </div>
 
-  <main class="wrap">
-    <div class="box1">
-      <img src="./Images/V-MOVIEEE.png" alt="V-MOVIEEE">
-      <h4>V-MOIEEE</h4>
-      <p>Explore movie trailers and insights including cast and ratings. Updated regularly for film enthusiasts.</p>
+    <section class="concept-container">
+      <p class="concept-text">
+        The name <span class="highlight-eee">THREEE</span> represents a strategic convergence of branding and functionality. 
+        It is built on the <strong>Power of Three</strong>—the principle that information grouped in threes is more satisfying and memorable. 
+        Our ecosystem is architected around three core entertainment pillars, each represented by an <strong>E</strong>:
+        <br><br>
+        <span class="highlight-eee">M-O-V-I-E-E-E</span> &bull; 
+        <span class="highlight-eee">A-R-C-A-D-E-E-E</span> &bull; 
+        <span class="highlight-eee">T-U-N-E-E-E</span>
+      </p>
+    </section>
+
+    <div class="section-divider">
+      <h2>OUR PLATFORMS</h2>
     </div>
-    <div class="box1">
-      <img src="./Images/V-GAMEEE.png" alt="V-GAMEEE">
-      <h4>V-GAMEEE</h4>
-      <p>Access a variety of single and multiplayer games. We regularly update our collection to keep the fun alive.</p>
+
+    <main class="wrap">
+      <div class="box1">
+        <img src="./Images/V-MOVIEEE.png" alt="V-MOVIEEE">
+        <h4>V-MOVIEEE</h4>
+        <p>Our cinematic pillar. Explore trending global blockbusters with real-time updates and HD trailers via our integrated YouTube player.</p>
+      </div>
+
+      <div class="box1">
+        <img src="./Images/V-GAMEEE.png" alt="V-ARCADEEE">
+        <h4>V-ARCADEEE</h4>
+        <p>Our interactive sanctuary. Instant-play browser games designed for quick mental refreshes within your digital workspace.</p>
+      </div>
+
+      <div class="box1">
+        <img src="./Images/V-TUNEEE.png" alt="V-TUNEEE">
+        <h4>V-TUNEEE</h4>
+        <p>Our rhythmic core. Stream trending global tracks across diverse genres, providing the perfect soundtrack for every mood.</p>
+      </div>
+    </main>
+
+    <div class="section-divider">
+      <h2>UNDER THE HOOD</h2>
     </div>
-    <div class="box1">
-      <img src="./Images/V-TUNEEE.png" alt="V-TUNEEE">
-      <h4>V-TUNEEE</h4>
-      <p>Stream the latest music across various genres and stay updated with our regularly refreshed library.</p>
+
+    <section class="more-info-grid">
+      <div class="info-card">
+        <h3>Design Principles</h3>
+        <ul>
+          <li><strong>Minimalist UI</strong>: Reducing cognitive load through clean layouts.</li>
+          <li><strong>Theme Adaptive</strong>: Full support for Light and Dark modes.</li>
+          <li><strong>Unified Identity</strong>: One account for all three entertainment pillars.</li>
+          <li><strong>Responsive Flow</strong>: Seamless experience across mobile and desktop.</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h3>Tech Philosophy</h3>
+        <ul>
+          <li><strong>Zero Friction</strong>: No heavy downloads; instant browser-based access.</li>
+          <li><strong>Modular Build</strong>: Independent service clusters (V-Modules).</li>
+          <li><strong>Low Latency</strong>: Optimized for speed and performance.</li>
+          <li><strong>Data Security</strong>: Secure encrypted access for your digital journey.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="section-divider">
+      <h2>OUR MISSION</h2>
     </div>
-  </main>
+
+    <section class="mission-section">
+      <p class="mission-text">
+        "To redefine how users interact with digital entertainment by creating a high-performance, 
+        unified ecosystem that balances cinema, arcade, and rhythm under one identity."
+      </p>
+    </section>
+  </div>
 
   <script>
     (function(){

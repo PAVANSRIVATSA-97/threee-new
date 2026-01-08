@@ -3,10 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>THREEE — Register</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Register — THREEE</title>
+  
   <link rel="icon" href="./Images/ic_launcher.png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+  
   <style>
     :root {
       --bg-900: #030617;
@@ -18,162 +20,250 @@
       --muted: #96a3b6;
     }
 
-    /* Light theme overrides */
     body.light {
       --bg-900: #f8fafc;
       --bg-800: #eef2ff;
       --muted: #334155;
       color: #071135;
-      background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 70%);
     }
 
-    body.light nav a { color: #334155; }
-    body.light nav a:hover { color: #7c3aed; }
-    body.light .hero, body.light .card {
-      background: rgba(255, 255, 255, 0.98);
-      border: 1px solid rgba(2, 6, 23, 0.08);
-      color: #071135;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
+    html, body, .info-container, .card, .pill, input { 
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+      will-change: background-color, color; 
     }
-    body.light h1, body.light .card h2, body.light .brand > div > div:first-child { color: #071135; }
 
-    * { box-sizing: border-box; }
     html, body { 
-      height: 100%; margin: 0; overflow: hidden; 
-      font-family: 'Inter', sans-serif; color: #e6eef8; 
-      background: linear-gradient(180deg, var(--bg-900) 0%, var(--bg-800) 70%);
+      height: 100vh; margin: 0; font-family: 'Inter', sans-serif; 
+      color: #e6eef8; background: linear-gradient(180deg, var(--bg-900) 0%, var(--bg-800) 70%);
+      display: flex; flex-direction: column; overflow: hidden; 
     }
 
-    header { display: flex; align-items: center; justify-content: space-between; padding: 15px 36px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; }
-    .brand { display: flex; align-items: center; gap: 14px; color: white; text-decoration: none; }
-    .brand img { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; }
-    .brand > div > div:first-child { font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 18px; }
+    header { 
+      display: flex; align-items: center; justify-content: space-between; 
+      padding: 15px 36px; max-width: 1200px; width: 100%; margin: 0 auto; 
+      position: relative; z-index: 10; flex-shrink: 0; 
+    }
 
-    nav { display: flex; align-items: center; }
-    nav a { color: var(--muted); text-decoration: none; margin-left: 20px; font-weight: 600; transition: all 0.2s ease; }
-    nav a:hover { color: white; }
-    #theme-toggle { background: transparent; border: 0; font-size: 20px; cursor: pointer; margin-left: 20px; }
+    .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; }
+    .brand img { width: 44px; height: 44px; border-radius: 10px; }
+    .brand-title { font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 19px; line-height: 1.1; }
+    .brand-tagline { font-size: 12px; color: var(--muted); margin-top: -2px; padding-top: 3px;font-family: 'Orbitron', sans-serif; }
 
-    /* Welcome Header */
-    .welcome-container { width: 100%; display: flex; justify-content: center; align-items: center; padding: 5px 0; }
+    .nav-group { display: flex; align-items: center; }
+    nav a { color: var(--muted); text-decoration: none; margin-left: 20px; font-weight: 600; transition: all 0.2s; position: relative;font-size: 18px; font-family: 'Orbitron', sans-serif; }
+    nav a:hover, nav a.active { color: var(--accent); }
+    nav a.active::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 2px;
+      background: var(--accent); box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    #theme-toggle { background: transparent; border: 0; font-size: 25px; cursor: pointer; margin-left: 20px; padding: 0;padding-bottom: 1px; }
+
+    .welcome-container { text-align: center; padding: 5px 0; flex-shrink: 0; }
     .welcome-header {
-      text-align: center; font-family: 'Orbitron', sans-serif; font-size: 64px; font-weight: 800;
-      background: linear-gradient(to right, #7c3aed, #60a5fa);
-      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      margin: 10px 0; font-family: 'Orbitron', sans-serif; font-size: 64px; font-weight: 800; 
+      background: linear-gradient(to right, #7c3aed, #60a5fa); -webkit-background-clip: text; 
+      background-clip: text; -webkit-text-fill-color: transparent;
       text-shadow: 0 10px 30px rgba(124, 58, 237, 0.15);
       animation: reveal 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, float 4s ease-in-out infinite;
     }
 
-    @keyframes reveal {
-      0% { opacity: 0; letter-spacing: -12px; filter: blur(10px); transform: translateY(15px); }
-      100% { opacity: 1; letter-spacing: 4px; filter: blur(0); transform: translateY(0); }
-    }
+    @keyframes reveal { 0% { opacity: 0; letter-spacing: -12px; filter: blur(10px); transform: translateY(15px); } 100% { opacity: 1; letter-spacing: 4px; filter: blur(0); transform: translateY(0); } }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
     .wrap { 
-      max-width: 1200px; margin: 10px auto; padding: 0 36px; 
-      display: grid; grid-template-columns: 1.2fr 420px; gap: 40px; 
-      align-items: stretch; height: 420px;
+      max-width: 1200px; margin: 0 auto; padding: 0px 36px 10px; 
+      display: grid; gap: 40px; width: 100%; justify-content: center;
+      position: relative; z-index: 2; grid-template-columns: 1.3fr 420px; align-items: stretch;
     }
 
-    /* Refined Info Container (Hero) */
-    .hero { 
-      display: flex; flex-direction: column; 
-      justify-content: flex-start; /* Shifts content up */
-      padding: 18px 32px 32px; /* Reduced top padding */
-      border-radius: 14px; background: var(--card-bg); 
-      border: 1px solid var(--card-border); box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6); 
+    .info-container { 
+      padding: 36px; border-radius: 14px; background: var(--card-bg); 
+      border: 1px solid var(--card-border); box-shadow: 0 8px 30px rgba(2, 6, 23, 0.4);
+      display: flex; flex-direction: column; position: relative; overflow: hidden; z-index: 1;
     }
 
-    .card { padding: 32px; border-radius: 14px; background: var(--card-bg); border: 1px solid var(--card-border); box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6); }
+    .info-container h1 { font-family: 'Orbitron', sans-serif; font-size: 32px; margin: 0 0 10px; letter-spacing: 1px; }
+    .lead { color: #fff; font-weight: 600; line-height: 1.6; margin-bottom: 10px; font-size: 16px; }
+    body.light .lead { color: #071135; }
 
-    h1 { font-size: 40px; color: white; margin: 0 0 10px; }
-    p.lead { color: var(--muted); line-height: 1.7; margin-bottom: 20px; font-size: 15px; }
-
-    /* Feature Badges with Hover Visibility Fix */
-    .features { display: flex; justify-content: space-between; gap: 12px; margin-top: auto; padding-bottom: 10px; }
-    .feature { 
-      background: rgba(255,255,255,0.02); padding: 14px; border-radius: 12px; 
-      font-size: 13px; font-weight: 700; color: var(--muted); text-align: center; 
-      flex: 1; transition: all 0.3s ease; border: 1px solid transparent;
-    }
-    .feature span { display: block; font-size: 20px; margin-bottom: 6px; }
-    .feature:hover { 
-      background: rgba(124, 58, 237, 0.1); color: white; transform: translateY(-5px);
-      border: 1px solid rgba(124, 58, 237, 0.3); box-shadow: 0 10px 20px rgba(124, 58, 237, 0.1);
+    .sub-lead { 
+      font-size: 13.5px; color: var(--muted); opacity: 0.9; line-height: 1.6; 
+      margin-bottom: 25px; max-width: 90%; 
     }
 
-    /* Light Mode Hover Text Fix */
-    body.light .feature:hover { 
-      background: rgba(124, 58, 237, 0.1); 
-      color: #7c3aed !important; /* Ensure visibility */
-      border: 1px solid rgba(124, 58, 237, 0.2); 
+    .feature-pills { display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
+    .pill {
+      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border);
+      padding: 10px 22px; border-radius: 25px; font-size: 14px; font-weight: 700;
+      color: var(--muted); font-family: 'Orbitron', sans-serif; display: flex; align-items: center; gap: 8px;
+    }
+    body.light .pill { background: #fff; border: 1px solid rgba(124, 58, 237, 0.2); }
+
+    .secure-badge {
+      display: flex; align-items: center; gap: 12px; padding: 14px;
+      background: rgba(124, 58, 237, 0.08); border-radius: 12px;
+      border-left: 4px solid var(--accent); margin-top: auto;
     }
 
-    .card h2 { color: white; margin: 0 0 8px; font-size: 22px; }
-    label { display: block; font-size: 11px; color: var(--muted); margin-top: 10px; }
-    input { width: 100%; padding: 11px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color: white; margin-top: 5px; }
+    .pulse-ring {
+      width: 8px; height: 8px; background: var(--accent); border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent); animation: pulse-glow 2s infinite;
+    }
+
+    @keyframes pulse-glow {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      70% { transform: scale(1.5); opacity: 0; }
+      100% { transform: scale(0.95); opacity: 0; }
+    }
+
+    .badge-text { font-size: 11px; font-weight: 800; letter-spacing: 1px; color: var(--accent); }
+
+    .card { 
+      padding: 36px; border-radius: 14px; background: var(--card-bg); 
+      border: 1px solid var(--card-border); box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+      display: flex; flex-direction: column;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-8px); }
+    }
     
-    .actions { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; }
-    .actions a { color: #a78bfa; text-decoration: none; font-weight: 700; font-size: 13px; }
+    body.light .info-container, body.light .card { background: rgba(255, 255, 255, 0.98); border: 1px solid rgba(2, 6, 23, 0.1); color: #071135; }
+
+    .card h2 { margin: 0 0 5px; font-size: 22px; }
+    label { display: block; font-size: 11px; color: var(--muted); margin-top: 15px; font-weight: 600; }
+
+    .input-wrapper {
+      position: relative;
+      width: 100%;
+      margin-top: 6px;
+    }
+
+    input { 
+      width: 100%; padding: 12px; padding-right: 45px; border-radius: 10px; 
+      border: 1px solid var(--card-border); background: rgba(255,255,255,0.02); 
+      color: inherit; font-size: 15px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 18px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .toggle-password:hover { opacity: 1; }
+
+    body.light input { border: 1.5px solid rgba(124, 58, 237, 0.2); background: #ffffff; color: #0f172a; }
+    input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
     
-    button { 
+    .actions { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+    .actions a { color: var(--accent); text-decoration: none; font-weight: 700; font-size: 13px; }
+    
+    button[type="submit"] { 
       background: linear-gradient(90deg, var(--accent), #9a6bff); color: white; 
-      padding: 11px 22px; border-radius: 11px; border: 0; font-weight: 800; 
-      cursor: pointer; transition: transform 0.2s; 
+      padding: 12px 28px; border-radius: 11px; border: 0; font-weight: 800; cursor: pointer;
+      transition: transform 0.2s;
     }
-    button:hover { transform: translateY(-3px); box-shadow: 0 10px 30px var(--accent-glow); }
+    button[type="submit"]:hover { transform: scale(1.02); }
+
+    /* New Error Box Styled to match Login page */
+    #reg-error-box {
+      display: none; color: #ff4d4d; background: rgba(255, 77, 77, 0.1); 
+      padding: 10px; border-radius: 8px; font-size: 12px; font-weight: 700; 
+      margin-top: 15px; border: 1px solid rgba(255, 77, 77, 0.2); text-align: left;
+      font-family: 'Inter', sans-serif;
+    }
 
     @media (max-width: 980px) {
-      .wrap { grid-template-columns: 1fr; height: auto; overflow: auto; padding-bottom: 30px; }
-      html, body { overflow: auto; }
+      body { overflow-y: auto; height: auto; }
+      .wrap { grid-template-columns: 1fr; padding: 20px; }
       .welcome-header { font-size: 42px; }
+      .info-container { display: none; } 
     }
   </style>
 </head>
 <body>
   <header>
-    <a class="brand" href="./index.html">
+    <a class="brand" href="../home.html">
       <img src="./Images/ic_launcher.png" alt="logo">
       <div>
-        <div>THREEE</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px">The new definition of Entertainment</div>
+        <div class="brand-title">THREEE</div>
+        <div class="brand-tagline">Entertainment redefined</div>
       </div>
     </a>
-    <nav>
-      <a href="./about.html">About</a>
-      <a href="./login.html">Login</a>
-      <button id="theme-toggle" aria-label="Toggle Theme">🌙</button>
-    </nav>
+    <div class="nav-group">
+      <nav>
+        <a href="./about.html">About</a>
+        <a href="./index.html" class="active">Register</a>
+        <a href="./login.html">Login</a>
+      </nav>
+      <button id="theme-toggle">🌙</button>
+    </div>
   </header>
 
   <div class="welcome-container">
-    <div class="welcome-header">Welcome</div>
+    <div class="welcome-header">Join THREEE</div>
   </div>
 
   <main class="wrap">
-    <section class="hero">
-      <h1>Listen, View, Play</h1>
-      <p class="lead">Experience the new definition of entertainment. Stream your favorite tracks, explore movie insights, and challenge yourself with interactive games.</p>
-      <div class="features">
-        <div class="feature"><span>🎵</span>Listen Music</div>
-        <div class="feature"><span>🎬</span>Movie Info</div>
-        <div class="feature"><span>🎮</span>Play Games</div>
+    <section class="info-container">
+      <h1>Entertainment <span style="color: var(--accent);">Awaits</span></h1>
+      <p class="lead">Your personalized gateway to premium digital experiences and arcade adventures.</p>
+      
+      <p class="sub-lead">
+        Join our community today to unlock a seamless world of music streaming, cinema insights, 
+        and interactive games. Your personalized journey across the THREEE ecosystem starts here.
+      </p>
+
+      <div class="feature-pills">
+        <div class="pill">🎬 Cinema</div>
+        <div class="pill">🎮 Arcade</div>
+        <div class="pill">🎵 Beats</div>
+      </div>
+
+      <div class="secure-badge">
+        <div class="pulse-ring"></div>
+        <span class="lock-icon">🔐</span>
+        <span class="badge-text">SECURE ENCRYPTED ACCESS</span>
       </div>
     </section>
 
     <aside class="card">
       <h2>Create an account</h2>
-      <p class="muted" style="font-size:12px; margin:0;">Join our community in less than a minute.</p>
-      <form action="/signup" method="POST" onsubmit="return checkPasswords(event)">
-        <label for="email">Email</label>
-        <input type="text" id="email" name="email" placeholder="you@domain.com" required>
-        <label for="psw">Password</label>
-        <input type="password" id="psw" name="psw" placeholder="Enter password" required>
-        <label for="psw-repeat">Confirm password</label>
-        <input type="password" id="psw-repeat" name="psw-repeat" placeholder="Repeat password" required>
+      <p style="font-size: 12px; color: var(--muted); margin: 0 0 15px;">Join our community in less than a minute.</p>
+      
+      <form id="registerForm" action="/signup" method="POST">
+        <label>Email Address</label>
+        <div class="input-wrapper">
+          <input type="email" name="email" placeholder="you@domain.com" required>
+        </div>
+        
+        <label>Password</label>
+        <div class="input-wrapper">
+          <input type="password" id="psw" name="psw" placeholder="Enter password" required>
+          <span class="toggle-password" onclick="togglePassword('psw', this)">👁️</span>
+        </div>
+        
+        <label>Confirm Password</label>
+        <div class="input-wrapper">
+          <input type="password" id="psw-repeat" name="psw-repeat" placeholder="Repeat password" required>
+          <span class="toggle-password" onclick="togglePassword('psw-repeat', this)">👁️</span>
+        </div>
+
+        <div id="reg-error-box"></div>
+
         <div class="actions">
-          <div class="muted" style="font-size:12px">Already a member? <a href="./login.html">Log in</a></div>
+          <div class="muted" style="font-size:12px; color: var(--muted)">Already a member? <a href="./login.html">Log in</a></div>
           <button type="submit">Register</button>
         </div>
       </form>
@@ -181,11 +271,112 @@
   </main>
 
   <script>
+    // Show Password Toggle
+    function togglePassword(id, icon) {
+      const field = document.getElementById(id);
+      if (field.type === "password") {
+        field.type = "text";
+        icon.innerText = "🙈";
+      } else {
+        field.type = "password";
+        icon.innerText = "👁️";
+      }
+    }
+
+    // Server-side and Client-side Error Detection Logic
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorBox = document.getElementById('reg-error-box');
+        const card = document.querySelector('.card');
+        const p2 = document.getElementById('psw-repeat');
+
+        // Check for URL parameters from server redirect
+        if (urlParams.has('error')) {
+            const errorType = urlParams.get('error');
+            if (errorBox) {
+                errorBox.style.display = 'block';
+                if (card) card.style.animation = 'shake 0.4s ease-in-out';
+                
+                if (errorType === 'mismatch') {
+                    errorBox.textContent = "⚠️ Passwords do not match.";
+                } else if (errorType === 'exists') {
+                    errorBox.textContent = "⚠️ Email already registered.";
+                }
+            }
+        }
+
+        // Local Validation (prevents form submission if mismatch)
+        const form = document.getElementById('registerForm');
+        const p1 = document.getElementById('psw');
+
+        form.addEventListener('submit', (e) => {
+            if (p1.value !== p2.value) {
+                e.preventDefault();
+                errorBox.style.display = 'block';
+                errorBox.textContent = "⚠️ Passwords do not match.";
+                p2.style.borderColor = '#ff4d4d';
+                if (card) card.style.animation = 'shake 0.4s ease-in-out';
+            }
+        });
+
+        // Reset error styling when user starts typing again
+        p2.addEventListener('input', () => {
+            errorBox.style.display = 'none';
+            p2.style.borderColor = '';
+        });
+    });
+
+    // Particle Engine Logic
+    const container = document.querySelector('.info-container');
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'absolute'; canvas.style.top = '0'; canvas.style.left = '0';
+    canvas.style.zIndex = '-1'; canvas.style.opacity = '0.4';
+    container.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resize() {
+        canvas.width = container.offsetWidth;
+        canvas.height = container.offsetHeight;
+        init();
+    }
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2.2;
+            this.speedY = Math.random() * 0.4 + 0.1;
+        }
+        update() {
+            this.y -= this.speedY;
+            if (this.y < 0) this.y = canvas.height;
+        }
+        draw() {
+            ctx.fillStyle = '#7c3aed';
+            ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+        }
+    }
+
+    function init() {
+        particles = [];
+        for (let i = 0; i < 40; i++) particles.push(new Particle());
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animate);
+    }
+
+    // Theme Logic
     (function(){
       const btn = document.getElementById('theme-toggle');
       const apply = (mode) => {
         document.body.classList.toggle('light', mode === 'light');
         btn.textContent = mode === 'light' ? '☀️' : '🌙';
+        setTimeout(resize, 50); 
       };
       const saved = localStorage.getItem('threee-theme') || 'dark';
       apply(saved);
@@ -196,15 +387,9 @@
       });
     })();
 
-    function checkPasswords(e){
-      const pw = document.getElementById('psw').value;
-      const pw2 = document.getElementById('psw-repeat').value;
-      if(pw !== pw2){
-        alert('Passwords do not match.');
-        return false;
-      }
-      return true;
-    }
+    window.addEventListener('resize', resize);
+    resize();
+    animate();
   </script>
 </body>
 </html>

@@ -1,142 +1,137 @@
-console.log("welcome to v-tune");
-//variables
-let songIndex = 0;
-let audioElement = new Audio("songs/1.mp3");
-let masterPlay = document.getElementById("masterPlay");
-let duration = document.getElementById("duration");
-let gif = document.getElementById("gif");
-let masterSongName = document.getElementById("masterSongName");
-let songItems = Array.from(document.getElementsByClassName("songItem"));
+const clientID = '060fb638'; 
+let player = new Audio();
+let debounceTimer;
 
-let songs = [
-  {
-    songName: "Tillu Anna Dj Pedithe",
-    filepath: "songs/1.mp3",
-    coverpath: "./Images/DJ-Tillu-2.jpg",
-  },
-  {
-    songName: "Kommuram Bheemudo",
-    filepath: "songs/2.mp3",
-    coverpath: "./Images/rrr.png",
-  },
-  {
-    songName: "Pataas Pilla",
-    filepath: "songs/3.mp3",
-    coverpath: "./Images/DJ-Tillu-2.jpg",
-  },
-  {
-    songName: "La La Bheemla",
-    filepath: "songs/4.mp3",
-    coverpath: "./Images/bheemla nayak.jpg",
-  },
-  {
-    songName: "Dheera Dheera",
-    filepath: "songs/5.mp3",
-    coverpath: "./Images/kgf.jpg",
-  },
-  {
-    songName: "Spirit Of Jersey",
-    filepath: "songs/6.mp3",
-    coverpath: "./Images/jersey.jpg",
-  },
-  {
-    songName: "Rise Of Shyam",
-    filepath: "songs/7.mp3",
-    coverpath: "./Images/ssr.jpg",
-  },
-  {
-    songName: "Naatu Naatu",
-    filepath: "songs/8.mp3",
-    coverpath: "./Images/rrr.png",
-  },
-  {
-    songName: "Needa Padadhani",
-    filepath: "songs/9.mp3",
-    coverpath: "./Images/jersey.jpg",
-  },
-];
-songItems.forEach((element, i) => {
-  element.getElementsByTagName("img")[0].src = songs[i].coverpath;
-  element.getElementsByClassName("songName")[0].innerText = songs[i].songName;
+// 1. Theme Toggle
+const themeToggle = document.getElementById('theme-toggle');
+const body = document.body;
+
+if (localStorage.getItem('theme') === 'light-mode') {
+    body.classList.add('light-mode');
+    themeToggle.textContent = '☀️';
+}
+
+themeToggle.addEventListener('click', () => {
+    body.classList.toggle('light-mode');
+    const isLight = body.classList.contains('light-mode');
+    themeToggle.textContent = isLight ? '☀️' : '🌙';
+    localStorage.setItem('theme', isLight ? 'light-mode' : 'dark-mode');
 });
 
-//play and pause
-masterPlay.addEventListener("click", () => {
-  if (audioElement.paused || audioElement.currentTime <= 0) {
-    audioElement.play();
-    masterPlay.classList.remove("fa-circle-play");
-    masterPlay.classList.add("fa-circle-pause");
-    gif.style.opacity = 1;
-  } else {
-    audioElement.pause();
-    masterPlay.classList.remove("fa-circle-pause");
-    masterPlay.classList.add("fa-circle-play");
-    gif.style.opacity = 0;
-  }
-});
-//Listen
-audioElement.addEventListener("timeupdate", () => {
-  //console.log('timeupdate');
-  //update duration bar
-  progress = parseInt((audioElement.currentTime / audioElement.duration) * 100);
-  //console.log(progress);
-  duration.value = progress;
-});
+// 2. View Switching
+function showSection(view) {
+    const homeView = document.getElementById('view-home');
+    const searchView = document.getElementById('view-search');
+    const searchInput = document.getElementById('inner-search-input');
 
-duration.addEventListener("change", () => {
-  audioElement.currentTime = (duration.value * audioElement.duration) / 100;
-});
-const makeAllPlays = () => {
-  Array.from(document.getElementsByClassName("songItemPlay")).forEach(
-    (element) => {
-      element.classList.remove("fa-circle-pause");
-      element.classList.add("fa-circle-play");
+    if (view === 'search') {
+        homeView.style.display = 'none';
+        searchView.style.display = 'block';
+        searchInput.focus(); 
+    } else {
+        homeView.style.display = 'block';
+        searchView.style.display = 'none';
     }
-  );
+
+    document.querySelectorAll('.nav-links a').forEach(el => el.classList.remove('active'));
+    const navEl = document.getElementById(`nav-${view}`);
+    if(navEl) navEl.classList.add('active');
+}
+
+// 3. Playback & Sliders
+const playBtn = document.getElementById('play-pause');
+const progressSlider = document.getElementById('progress');
+const volumeSlider = document.getElementById('volume');
+
+progressSlider.addEventListener('input', () => {
+    if (!player.duration) return;
+    player.currentTime = (progressSlider.value / 100) * player.duration;
+});
+
+volumeSlider.addEventListener('input', () => {
+    player.volume = volumeSlider.value;
+});
+
+function playMusic(url, title, artist, img) {
+    player.src = url;
+    player.play();
+    document.getElementById('track-name').textContent = title;
+    document.getElementById('artist-name').textContent = artist;
+    document.getElementById('now-playing-img').src = img;
+    playBtn.textContent = "⏸";
+}
+
+playBtn.onclick = () => {
+    if (!player.src) return;
+    if (player.paused) { player.play(); playBtn.textContent = "⏸"; }
+    else { player.pause(); playBtn.textContent = "▶"; }
 };
 
-Array.from(document.getElementsByClassName("songItemPlay")).forEach(
-  (element) => {
-    element.addEventListener("click", (e) => {
-      makeAllPlays();
-      songIndex = parseInt(e.target.id);
-      e.target.classList.remove("fa-circle-play");
-      e.target.classList.add("fa-circle-pause");
-      audioElement.src = `songs/${songIndex + 1}.mp3`;
-      //masterSongName.innerText = songs[songIndex].songName;
-      audioElement.currentTime = 0;
-      audioElement.play();
-      gif.style.opacity = 1;
-      masterPlay.classList.remove("fa-circle-play");
-      masterPlay.classList.add("fa-circle-pause");
-    });
-  }
-);
+player.ontimeupdate = () => {
+    if (player.duration) {
+        progressSlider.value = (player.currentTime / player.duration) * 100;
+        document.getElementById('current-time').textContent = formatTime(player.currentTime);
+        document.getElementById('total-duration').textContent = formatTime(player.duration);
+    }
+};
 
-document.getElementById("next").addEventListener("click", () => {
-  if (songIndex >= 9) {
-    songIndex = 0;
-  } else {
-    songIndex += 1;
-  }
-  audioElement.src = `songs/${songIndex + 1}.mp3`;
-  //masterSongName.innerText = songs[songIndex].songName;
-  audioElement.currentTime = 0;
-  audioElement.play();
-  masterPlay.classList.remove("fa-circle-play");
-  masterPlay.classList.add("fa-circle-pause");
+function formatTime(seconds) {
+    if (isNaN(seconds)) return "0:00";
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60);
+    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+}
+
+// 4. Search API with Clear Button Logic
+const innerSearch = document.getElementById('inner-search-input');
+const clearBtn = document.getElementById('clear-search');
+
+innerSearch.addEventListener('input', () => {
+    const query = innerSearch.value.trim();
+    
+    // Toggle Clear button visibility
+    clearBtn.style.display = query.length > 0 ? 'block' : 'none';
+
+    clearTimeout(debounceTimer);
+    if (query.length < 2) {
+        document.getElementById('search-results').innerHTML = '';
+        return;
+    }
+    document.getElementById('search-results').innerHTML = '<div class="loader"></div>';
+    debounceTimer = setTimeout(() => fetchMusic(query, 'search-results'), 500);
 });
 
-document.getElementById("previous").addEventListener("click", () => {
-  if (songIndex <= 0) {
-    songIndex = 0;
-  } else {
-    songIndex -= 1;
-  }
-  audioElement.src = `songs/${songIndex + 1}.mp3`;
-  //masterSongName.innerText = songs[songIndex].songName;
-  audioElement.currentTime = 0;
-  audioElement.play();
-  masterPlay.classList.remove("fa-circle-play");
-  masterPlay.classList.add("fa-circle-pause");
+// Logic to clear search
+clearBtn.addEventListener('click', () => {
+    innerSearch.value = '';
+    clearBtn.style.display = 'none';
+    document.getElementById('search-results').innerHTML = '';
+    innerSearch.focus();
 });
+
+async function fetchMusic(query, targetGrid) {
+    const url = `https://api.jamendo.com/v3.0/tracks/?client_id=${clientID}&format=json&namesearch=${query}&include=musicinfo&imagesize=600&limit=15`;
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const container = document.getElementById(targetGrid);
+        
+        if (data.results.length === 0) {
+            container.innerHTML = '<p style="text-align:center; width:100%; color:var(--muted);">No results found.</p>';
+            return;
+        }
+
+        container.innerHTML = data.results.map(track => `
+            <div class="box1" onclick="playMusic('${track.audio}', '${track.name}', '${track.artist_name}', '${track.image}')">
+                <img src="${track.image}" width="100%" style="border-radius: 8px;">
+                <h4>${track.name}</h4>
+                <p>${track.artist_name}</p>
+            </div>
+        `).join('');
+    } catch (error) { 
+        console.error(error);
+        document.getElementById(targetGrid).innerHTML = '<p style="color:red; text-align:center;">Error loading music.</p>';
+    }
+}
+
+fetchMusic('top', 'track-list');

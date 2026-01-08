@@ -1,7 +1,7 @@
 {
   "name": "threee",
   "version": "1.0.0",
-  "description": "THREEE – The New Definition of Entertainment web application",
+  "description": "THREEE – Entertainment redefined",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -18,6 +18,6 @@
     "nodemon": "^3.1.0"
   },
   "engines": {
-    "node": "24.x"
+    "node": "22.x" 
   }
 }
