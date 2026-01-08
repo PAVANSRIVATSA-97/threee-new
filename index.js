@@ -14,35 +14,46 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 /* 1. DATABASE CONNECTION */
-// PRIORITIZE: The Atlas connection string from Vercel Environment Variables
 const MONGO_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/THREEE-USERS";
 
-mongoose.connect(MONGO_URI, {
-    // Critical options for stable Vercel-to-Atlas connection
-    serverSelectionTimeoutMS: 5000, 
-    socketTimeoutMS: 45000,
-})
-  .then(() => console.log("✅ Connected to MongoDB (Atlas/Local)"))
-  .catch((err) => console.log("❌ Connection Error:", err));
+// Helper function to manage connection state
+const connectDB = async () => {
+    if (mongoose.connection.readyState >= 1) return;
+
+    try {
+        await mongoose.connect(MONGO_URI, {
+            serverSelectionTimeoutMS: 5000, // Wait 5s for initial connection
+            socketTimeoutMS: 45000,         // Keep socket open for 45s
+            family: 4                       // Force IPv4 to prevent DNS delays
+        });
+        console.log("✅ Successfully connected to MongoDB Atlas");
+    } catch (err) {
+        console.error("❌ MongoDB Connection Error:", err);
+    }
+};
+
+// Initial connection attempt
+connectDB();
 
 /* 2. SCHEMA & MODEL */
 const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true }
-}, { collection: 'users', timestamps: true }); // Explicitly maps to 'users' collection
+}, { collection: 'users', timestamps: true });
 
 const User = mongoose.model("User", userSchema);
 
 /* 3. ROUTES */
 
-// Root route: Serve the landing page directly to avoid redirect loops
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html")); 
 });
 
 // ACTION: SIGNUP
-// Renamed to /signup-user to prevent conflicts with index.html
 app.post("/signup-user", async (req, res) => {
+    // Ensure DB is connected before starting operation
+    await connectDB();
+    
     const { email, psw, "psw-repeat": repeatpassword } = req.body;
 
     if (psw !== repeatpassword) {
@@ -54,7 +65,6 @@ app.post("/signup-user", async (req, res) => {
         await newUser.save();
         return res.redirect(`/home.html?user=${encodeURIComponent(email)}`);
     } catch (err) {
-        // Handle Duplicate Email (Mongo Error 11000)
         if (err.code === 11000) {
             return res.redirect("/index.html?error=exists");
         }
@@ -64,25 +74,19 @@ app.post("/signup-user", async (req, res) => {
 });
 
 // ACTION: LOGIN
-// Renamed to /login-user to prevent conflicts with login.html
 app.post("/login-user", async (req, res) => {
+    // Ensure DB is connected
+    await connectDB();
+    
     const { email, psw } = req.body; 
-    console.log(`Attempting login for: ${email}`); 
 
     try {
-        const userFound = await User.findOne({ 
-            email: email, 
-            password: psw 
-        });
+        const userFound = await User.findOne({ email: email, password: psw });
 
         if (!userFound) {
-            console.log("❌ Login failed: No matching user found");
             return res.redirect("/login.html?error=1");
         }
-
-        console.log("✅ Login successful for:", email);
         return res.redirect(`/home.html?user=${encodeURIComponent(email)}`);
-
     } catch (err) {
         console.error("❌ Login error:", err);
         return res.status(500).send("Internal server error");
@@ -92,12 +96,8 @@ app.post("/login-user", async (req, res) => {
 /* 4. HELPER FUNCTION */
 function redirect_to_home(username, res) {
     const homePath = path.join(__dirname, "public", "home.html");
-    
     fs.readFile(homePath, "utf-8", (err, content) => {
-        if (err) {
-            console.log("❌ File read error:", err);
-            return res.status(500).send("Home page not found");
-        }
+        if (err) return res.status(500).send("Home page not found");
         const userDisplay = username.split("@")[0];
         const renderedHtml = ejs.render(content, { user: userDisplay });
         return res.send(renderedHtml);
@@ -105,7 +105,6 @@ function redirect_to_home(username, res) {
 }
 
 /* 5. START SERVER */
-// REQUIRED: Use process.env.PORT for Vercel deployment
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`🚀 Server listening on port ${port}`);
