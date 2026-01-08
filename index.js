@@ -30,7 +30,7 @@ const User = mongoose.model("User", userSchema);
 
 /* 3. ROUTES */
 app.get("/", (req, res) => {
-    return res.redirect("index.html");
+    res.sendFile(path.join(__dirname, "public", "index.html")); // Serves file directly
 });
 
 app.post("/signup", async (req, res) => {
