@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -14,7 +15,7 @@ app.use(express.static("public"));
 
 /* 1. DATABASE CONNECTION */
 // UPDATED: Using process.env.MONGODB_URI for remote Atlas connection
-const MONGO_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/mydb"; 
+const MONGO_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/THREEE-USERS";
 
 mongoose.connect(MONGO_URI)
   .then(() => console.log("✅ Connected to MongoDB (Atlas/Local)"))
