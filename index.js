@@ -14,10 +14,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 /* 1. DATABASE CONNECTION */
-// UPDATED: Using process.env.MONGODB_URI for remote Atlas connection
+// PRIORITIZE: The Atlas connection string from Vercel Environment Variables
 const MONGO_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/THREEE-USERS";
 
-mongoose.connect(MONGO_URI)
+mongoose.connect(MONGO_URI, {
+    // Critical options for stable Vercel-to-Atlas connection
+    serverSelectionTimeoutMS: 5000, 
+    socketTimeoutMS: 45000,
+})
   .then(() => console.log("✅ Connected to MongoDB (Atlas/Local)"))
   .catch((err) => console.log("❌ Connection Error:", err));
 
@@ -25,16 +29,20 @@ mongoose.connect(MONGO_URI)
 const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true }
-}, { collection: 'users', timestamps: true });
+}, { collection: 'users', timestamps: true }); // Explicitly maps to 'users' collection
 
 const User = mongoose.model("User", userSchema);
 
 /* 3. ROUTES */
+
+// Root route: Serve the landing page directly to avoid redirect loops
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html")); // Serves file directly
+    res.sendFile(path.join(__dirname, "public", "index.html")); 
 });
 
-app.post("/signup", async (req, res) => {
+// ACTION: SIGNUP
+// Renamed to /signup-user to prevent conflicts with index.html
+app.post("/signup-user", async (req, res) => {
     const { email, psw, "psw-repeat": repeatpassword } = req.body;
 
     if (psw !== repeatpassword) {
@@ -46,15 +54,18 @@ app.post("/signup", async (req, res) => {
         await newUser.save();
         return res.redirect(`/home.html?user=${encodeURIComponent(email)}`);
     } catch (err) {
+        // Handle Duplicate Email (Mongo Error 11000)
         if (err.code === 11000) {
             return res.redirect("/index.html?error=exists");
         }
         console.error("❌ Signup error:", err);
-        return res.status(500).send("Internal Server Error");
+        return res.status(500).send("Internal Server Error - Check Vercel Logs");
     }
 });
 
-app.post("/login", async (req, res) => {
+// ACTION: LOGIN
+// Renamed to /login-user to prevent conflicts with login.html
+app.post("/login-user", async (req, res) => {
     const { email, psw } = req.body; 
     console.log(`Attempting login for: ${email}`); 
 
@@ -94,7 +105,7 @@ function redirect_to_home(username, res) {
 }
 
 /* 5. START SERVER */
-// UPDATED: Using process.env.PORT for Vercel compatibility
+// REQUIRED: Use process.env.PORT for Vercel deployment
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`🚀 Server listening on port ${port}`);
