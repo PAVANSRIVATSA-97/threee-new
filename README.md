@@ -1,4 +1,6 @@
 THREEE - Entertainment redifined
+
+
 THREEE is a full-stack web application designed for seamless user engagement and secure account management. Built with a focus on high availability and cloud-integrated data persistence, this project demonstrates a modern approach to user authentication and server-side rendering.
 
 🚀 Live Demo: https://threee-new.vercel.app/
